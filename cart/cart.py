@@ -16,6 +16,7 @@
     date: 2017/03/03
 '''
 import numpy as np
+import mymath
 
 class Node(object):
     def __init__(self, thresh=0, is_leaf=False):

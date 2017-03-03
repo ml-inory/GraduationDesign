@@ -19,7 +19,7 @@ feature_template = (
             [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]]
             )
 
-def get_haar_feature(template_num, size):
+def get_haar_template(template_num, size):
     global feature_template
     template = np.array(feature_template[template_num])
     t_h, t_w = template.shape
