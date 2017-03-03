@@ -124,7 +124,15 @@ class Tree(object):
         cur_node.set_left_node(LeftLeaf())
         cur_node.set_right_node(RightLeaf())
         self._depth += 1
-        
+    
+    def pred(self, x):
+        cur_node = self.head_node
+        y = cur_node.pred(x)
+        while not isinstance(y, int):
+            cur_node = cur_node.left_node
+            y = cur_node.pred(x)
+        return y
+
     def debug(self):
         cur_node = self.head_node
         print cur_node
