@@ -142,3 +142,7 @@ class Tree(object):
             right_node = cur_node.right_node if not cur_node.right_node.is_leaf else cur_node.right_node.value
             print left_node, right_node
             cur_node = left_node
+
+class CART(Tree):
+    def __init___(self, thresh):
+        super(CART, self).___init___(self, 1)

@@ -6,10 +6,10 @@ import mymath
 import os
 import cv2
 
-tree = cart.Tree(1)
-tree.debug()
-tree.add_layer(0.1)
-tree.debug()
+# tree = cart.Tree(1)
+# tree.debug()
+# tree.add_layer(0.1)
+# tree.debug()
 
 #y = tree.pred(1)
 #print y
