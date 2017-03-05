@@ -1,1 +1,1 @@
-from haar import get_haar_template
+from haar import *
