@@ -24,7 +24,10 @@ import cv2
 # filt = haar.get_haar_template(0, (5,5)) 
 # print mymath.conv(filt, img)
 
-integral_image = haar.get_integral_image(np.ones((3,3)))
-print integral_image
-sum1 = haar.sum_by_integral(integral_image, (0,1), (2,2))
-print sum1
+data = (np.random.random((3,3))*100).astype('uint8')
+print 'data:\n', data
+integral_image = haar.get_integral_image(data)
+#sum1 = haar.sum_by_integral(integral_image, (0,1), (2,2))
+#print sum1
+haar_feature = haar.compute_haar_feature(integral_image, 4, (2,1), (0,0))
+print 'haar_feature\n', haar_feature
