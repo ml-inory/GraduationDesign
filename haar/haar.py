@@ -3,6 +3,7 @@
     Generate haar-like features
 '''
 import numpy as np
+from collections import defaultdict
 
 feature_template = (
             [[-1,1]],
@@ -18,6 +19,18 @@ feature_template = (
             [[1,1,1],[1,-8,1],[1,1,1]],
             [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]]
             )
+
+def find_index(src, msk=None):
+    """
+    Example using defaultdict to group value indexes with optional mask
+    """
+    ddl = defaultdict(list)
+
+    for idx, val in enumerate(src):
+        if msk is not None and val != msk:
+            continue
+        ddl[val].append(idx)
+    return ddl[msk]
 
 def get_haar_template(template_num, size):
     global feature_template
@@ -79,20 +92,80 @@ def compute_loss(features, labels):
     # s1: 在此元素之前的人脸样本的权重的和
     # s0: 在此元素之前的非人脸样本的权重的和
     # 分类误差: r = min((s1 + (t0 - s0)), (s0 + (t1 - s1)))
-    features = np.linalg.norm(features)
-    sorted_idx = np.argsort(-features)
-    labels = labels[sorted_idx]
-    t1 = np.sum(features[labels==1])
-    t0 = np.sum(features[labels==0])
+    norm_features = np.array((features - np.min(features)) / (np.max(features) - np.min(features)))
+    sorted_idx = np.argsort(-features) # 降序排序
+    labels = np.array(labels)[sorted_idx]
+    norm_features = norm_features[sorted_idx]
+    features = features[sorted_idx]
+
+    pos_idx = find_index(labels, 1)
+    neg_idx = find_index(labels, 0)
+    
+    t1 = np.sum(norm_features[pos_idx])
+    t0 = np.sum(norm_features[neg_idx])
 
     r = []
     for idx, feature in enumerate(features):
-        if 0 in labels[:idx] and 1 in labels[:idx]:
-            s1 = np.sum(features[labels[:idx]==1])
-            s0 = np.sum(features[labels[:idx]==0])
+        s0 = 0
+        s1 = 0
+        if 0 in labels[:idx]:
+            neg_idx = find_index(labels[:idx], 0)
+            s0 = np.sum(norm_features[neg_idx])
+        if 1 in labels[:idx]:
+            pos_idx = find_index(labels[:idx], 1)
+            s1 = np.sum(norm_features[pos_idx])
+        r.append(min(s1+t0-s0, s0+t1-s1))
+    # print min(r)
+    return np.min(r), features[np.argmin(r)]
 
-            r.append(np.min((s1 + (t0 - s0)), (s0 + (t1 - s1))))
-    return r
+def find_best_feature(dataset, labels, debug=False):
+    import time
+    if dataset.ndim == 2:
+        dataset = dataset.reshape((1,dataset.shape[0],dataset.shape[1]))
+    N, H, W = dataset.shape
+    integral_imgs = get_integral_image(dataset)
+    global feature_template
+    min_loss = None
+    for f_num in xrange(len(feature_template)): # 模板种类
+        t1 = time.time()
+        feature_min_loss = None
+        cur_template = np.array(feature_template[f_num])
+        template_h, template_w = cur_template.shape
+        scale_max_h, scale_max_w = int(H / template_h), int(W / template_w)
+        for scale_h in xrange(scale_max_h): # 大小
+            for scale_w in xrange(scale_max_w):
+                feature_h = (scale_h+1) * template_h
+                feature_w = (scale_w+1) * template_w
+                feature_size = (feature_h, feature_w)
+                for y in xrange(H-feature_h+1):
+                    for x in xrange(W-feature_w+1):
+                        pos = (y,x)
+                        haar_features = compute_haar_feature(integral_imgs, f_num, feature_size, pos)
+                        loss, thresh = compute_loss(haar_features, labels)
+                        
+                        if min_loss == None:
+                            min_loss = loss
+                        if loss < min_loss:
+                            min_loss = loss
+                            best_pos = pos
+                            best_size = feature_size
+                            best_feature_num = f_num
+                            best_thresh = thresh
 
-def find_best_feature(dataset):
-    pass
+                        if feature_min_loss == None:
+                            feature_min_loss = loss
+                        if loss < feature_min_loss:
+                            feature_min_loss = loss
+                            feature_best_pos = pos
+                            feature_best_size = feature_size
+                            feature_best_thresh = thresh
+
+                        if debug:
+                            break
+                            #return loss, (pos, feature_size, f_num), thresh
+                            
+        took_time = time.time() - t1
+        print 'feature {} of size {} slide to {}, output loss={}, thresh={}, took {}s'.format(f_num, feature_best_size, feature_best_pos, feature_min_loss, feature_best_thresh, took_time)
+        #if min_loss == 0:
+        #    break
+    return min_loss, (best_pos, best_size, best_feature_num), best_thresh
