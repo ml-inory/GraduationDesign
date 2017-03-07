@@ -119,7 +119,6 @@ def compute_loss(features, labels):
     return np.min(r), features[np.argmin(r)]
 
 def find_best_feature(dataset, labels, debug=False):
-    import time
     if dataset.ndim == 2:
         dataset = dataset.reshape((1,dataset.shape[0],dataset.shape[1]))
     N, H, W = dataset.shape
@@ -127,8 +126,6 @@ def find_best_feature(dataset, labels, debug=False):
     global feature_template
     min_loss = None
     for f_num in xrange(len(feature_template)): # 模板种类
-        t1 = time.time()
-        feature_min_loss = None
         cur_template = np.array(feature_template[f_num])
         template_h, template_w = cur_template.shape
         scale_max_h, scale_max_w = int(H / template_h), int(W / template_w)
@@ -143,6 +140,8 @@ def find_best_feature(dataset, labels, debug=False):
                         haar_features = compute_haar_feature(integral_imgs, f_num, feature_size, pos)
                         loss, thresh = compute_loss(haar_features, labels)
                         
+                        left_dataset = np.array(dataset)[haar_features > thresh]
+                        left_labels = np.array(labels)[haar_features > thresh]
                         if min_loss == None:
                             min_loss = loss
                         if loss < min_loss:
@@ -152,20 +151,10 @@ def find_best_feature(dataset, labels, debug=False):
                             best_feature_num = f_num
                             best_thresh = thresh
 
-                        if feature_min_loss == None:
-                            feature_min_loss = loss
-                        if loss < feature_min_loss:
-                            feature_min_loss = loss
-                            feature_best_pos = pos
-                            feature_best_size = feature_size
-                            feature_best_thresh = thresh
-
                         if debug:
                             break
                             #return loss, (pos, feature_size, f_num), thresh
                             
-        took_time = time.time() - t1
-        print 'feature {} of size {} slide to {}, output loss={}, thresh={}, took {}s'.format(f_num, feature_best_size, feature_best_pos, feature_min_loss, feature_best_thresh, took_time)
-        #if min_loss == 0:
-        #    break
-    return min_loss, (best_pos, best_size, best_feature_num), best_thresh
+        if min_loss == 0:
+            break
+    return min_loss, (best_pos, best_size, best_feature_num), best_thresh, left_dataset, left_labels

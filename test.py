@@ -50,32 +50,7 @@ def pred(img, thresh, settings):
         return 0
 
 img_paths, dataset, labels = read_dataset(['toy_dataset/pos','toy_dataset/neg'])
-loss, settings, thresh = haar.find_best_feature(dataset, labels)
-print 'min_loss={}'.format(loss)
-print 'best_feature_num={}'.format(settings[2])
-print 'best_size={}'.format(settings[1])
-print 'best_pos={}'.format(settings[0])
-print 'thresh={}'.format(thresh)
-
-#settings = ((11,8), (4,2), 1)
-#thresh = 0.11745
-acc = 0
-for img_path,img,label in zip(img_paths,dataset,labels):
-    result = pred(img, thresh, settings)
-    if result == label:
-        acc += 1
-    print 'image: {} predict to be {}, truth is {}'.format(img_path,result,label)
-print acc*1.0 / len(dataset)
-
-'''
-img = (np.random.random((5,5))*10).astype('int8')
-integral_img = haar.get_integral_image(img)
-feature_num = 0
-feature_size = (1,2)
-feature_pos = (0,0)
-print 'feature_num:{}\tfeature_size:{}\tfeature_pos:{}\n'.format(feature_num, feature_size, feature_pos)        
-feature = haar.compute_haar_feature(integral_img, feature_num, feature_size, feature_pos)
-print 'img\n',img
-print 'integral_img\n',integral_img
-print 'feature\n',feature[0]
-'''
+cart_ = cart.CART(3)
+cart_.train(dataset, labels)        
+img = cv2.imread(img_paths[0])
+print cart_.pred(img), img_paths[0]

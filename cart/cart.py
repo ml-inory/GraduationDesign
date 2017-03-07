@@ -17,6 +17,7 @@
 '''
 import numpy as np
 import mymath
+from haar import *
 
 class Node(object):
     def __init__(self, thresh=0, is_leaf=False):
@@ -61,6 +62,9 @@ class Node(object):
             self._operation = op_func
         else:
             raise AttributeError('Leaf node cannot set operation')
+    
+    def set_thresh(self, thresh):
+        self._thresh = thresh
 
     def operate(self, data):
         # compute score using self._operation,
@@ -93,24 +97,21 @@ class RightLeaf(Node):
 
 
 
-class Tree(object):
+class CART(object):
     def __init__(self, depth=1):
+        if depth < 1:
+            raise ValueError('depth must be larger or equal to 1')
+
         self._depth = depth
         self.head_node = Node(0)
-        self._build()
+        self.head_node.set_left_node(LeftLeaf())
+        self.head_node.set_right_node(RightLeaf())
+        for i in xrange(self._depth-1):
+            self.add_layer(0)
 
     @property
     def depth(self):
         return self._depth
-
-    def _build(self):
-        cur_node = self.head_node
-        for d in xrange(self.depth-1):
-            cur_node.set_left_node(Node())
-            cur_node.set_right_node(RightLeaf())
-            cur_node = cur_node.left_node
-        cur_node.set_left_node(LeftLeaf())
-        cur_node.set_right_node(RightLeaf())
 
     def get_bottom_node(self):
         cur_node = self.head_node
@@ -125,7 +126,19 @@ class Tree(object):
         cur_node.set_left_node(LeftLeaf())
         cur_node.set_right_node(RightLeaf())
         self._depth += 1
-    
+
+    def train(self, dataset, labels):
+        for i in xrange(self.depth):
+            loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
+            pos, size, f_num = settings
+            operation = lambda x:haar.compute_haar_features(haar.get_integral_image(x), f_num, size, pos)
+            if i == 0:
+                cur_node = self.head_node
+            else:
+                cur_node = cur_node.left_node
+            cur_node.set_thresh(thresh)
+            cur_node.set_operation(operation)
+
     def pred(self, x):
         cur_node = self.head_node
         y = cur_node.pred(x)
@@ -133,16 +146,3 @@ class Tree(object):
             cur_node = cur_node.left_node
             y = cur_node.pred(x)
         return y
-
-    def debug(self):
-        cur_node = self.head_node
-        print cur_node
-        for d in xrange(self.depth):
-            left_node = cur_node.left_node if not cur_node.left_node.is_leaf else cur_node.left_node.value
-            right_node = cur_node.right_node if not cur_node.right_node.is_leaf else cur_node.right_node.value
-            print left_node, right_node
-            cur_node = left_node
-
-class CART(Tree):
-    def __init___(self, thresh):
-        super(CART, self).___init___(self, 1)
