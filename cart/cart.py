@@ -92,7 +92,7 @@ class LeftLeaf(Node):
 class RightLeaf(Node):
     def __init__(self, is_leaf=True):
         super(RightLeaf, self).__init__(None, is_leaf)
-        self._value = -1
+        self._value = 0 
 
 
 
@@ -128,13 +128,13 @@ class CART(object):
         self._depth += 1
         return cur_node
 
-    def train(self, dataset, labels):
+    def train(self, dataset, labels, weights=None, stop_loss=0):
         import time
         for i in xrange(self.depth):
             t1 = time.time()
             if i == 0:
                 cur_node = self.head_node
-                loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
+                loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels, weights, stop_loss)
                 pos, size, f_num = settings
                 operation = lambda x:haar.compute_haar_feature(haar.get_integral_image(x), f_num, size, pos)
                 cur_node.set_thresh(thresh)
@@ -142,7 +142,7 @@ class CART(object):
             else:
                 if loss > 0:
                     cur_node = self.add_layer(0)
-                    loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
+                    loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels, weights, stop_loss)
                     pos, size, f_num = settings
                     operation = lambda x:haar.compute_haar_feature(haar.get_integral_image(x), f_num, size, pos)
                     cur_node.set_thresh(thresh)

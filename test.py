@@ -56,6 +56,7 @@ acc = 0
 for img_path,label in zip(img_paths, labels):
     img = cv2.imread(img_paths[0], 0)
     pred = cart_.pred(img)
+    print 'image {} predict to be {} truth is {}'.format(img_path, pred, label)
     if pred == label:
         acc += 1
 print 'accuracy:', acc*1.0 / len(labels)

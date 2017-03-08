@@ -86,7 +86,7 @@ def compute_haar_feature(integral_img, feature_num, feature_size, pos):
                 haar_feature[i] += sum_by_integral(integral_img[i], p1, p2) * template[r,c]
     return haar_feature
 
-def compute_loss(features, labels):
+def compute_loss(features, labels, weights=None):
     # t1: 全部人脸样本的权重的和
     # t0: 全部非人脸样本的权重的和
     # s1: 在此元素之前的人脸样本的权重的和
@@ -117,9 +117,10 @@ def compute_loss(features, labels):
             s1 = np.sum(norm_features[pos_idx])
         r.append(min(s1+t0-s0, s0+t1-s1))
     # print min(r)
+    r = np.array(r) * weights if weights is not None else np.array(r)
     return np.min(r), features[np.argmin(r)]
 
-def find_best_feature(dataset, labels, debug=False):
+def find_best_feature(dataset, labels, weights=None, stop_loss=0, debug=False):
     if dataset.ndim == 2:
         dataset = dataset.reshape((1,dataset.shape[0],dataset.shape[1]))
     N, H, W = dataset.shape
@@ -131,6 +132,7 @@ def find_best_feature(dataset, labels, debug=False):
         cur_template = np.array(feature_template[f_num])
         template_h, template_w = cur_template.shape
         scale_max_h, scale_max_w = int(H / template_h), int(W / template_w)
+        feature_min_loss = None                                        
         for scale_h in xrange(scale_max_h): # 大小
             for scale_w in xrange(scale_max_w):
                 feature_h = (scale_h+1) * template_h
@@ -140,7 +142,7 @@ def find_best_feature(dataset, labels, debug=False):
                     for x in xrange(W-feature_w+1):
                         pos = (y,x)
                         haar_features = compute_haar_feature(integral_imgs, f_num, feature_size, pos)
-                        loss, thresh = compute_loss(haar_features, labels)
+                        loss, thresh = compute_loss(haar_features, labels, weights)
                         
                         if min_loss == None:
                             min_loss = loss
@@ -156,12 +158,19 @@ def find_best_feature(dataset, labels, debug=False):
                             best_feature_num = f_num
                             best_thresh = thresh
                             best_features = haar_features
+
+                        if feature_min_loss == None:
+                            feature_min_loss = loss
+                            print 'feature {}: pos={} size={} loss={}'.format(f_num+1, pos, feature_size, feature_min_loss)
+                        if loss < feature_min_loss:
+                            feature_min_loss = loss
                             print 'feature {}: pos={} size={} loss={}'.format(f_num+1, pos, feature_size, min_loss)
+
                         if debug:
                             break
                             #return loss, (pos, feature_size, f_num), thresh
                             
-        if min_loss == 0:
+        if min_loss <= stop_loss:
             break
     left_dataset = np.array(dataset)[best_features > best_thresh]
     left_labels = np.array(labels)[best_features > best_thresh]
