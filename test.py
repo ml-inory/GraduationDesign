@@ -49,8 +49,13 @@ def pred(img, thresh, settings):
     else:
         return 0
 
-img_paths, dataset, labels = read_dataset(['toy_dataset/pos','toy_dataset/neg'])
+img_paths, dataset, labels = read_dataset(['dataset/pos','dataset/neg'])
 cart_ = cart.CART(3)
-cart_.train(dataset, labels)        
-img = cv2.imread(img_paths[0])
-print cart_.pred(img), img_paths[0]
+cart_.train(dataset, labels)
+acc = 0        
+for img_path,label in zip(img_paths, labels):
+    img = cv2.imread(img_paths[0], 0)
+    pred = cart_.pred(img)
+    if pred == label:
+        acc += 1
+print 'accuracy:', acc*1.0 / len(labels)

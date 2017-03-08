@@ -106,8 +106,8 @@ class CART(object):
         self.head_node = Node(0)
         self.head_node.set_left_node(LeftLeaf())
         self.head_node.set_right_node(RightLeaf())
-        for i in xrange(self._depth-1):
-            self.add_layer(0)
+        #for i in xrange(self._depth-1):
+#            self.add_layer(0)
 
     @property
     def depth(self):
@@ -126,19 +126,39 @@ class CART(object):
         cur_node.set_left_node(LeftLeaf())
         cur_node.set_right_node(RightLeaf())
         self._depth += 1
+        return cur_node
 
     def train(self, dataset, labels):
+        import time
         for i in xrange(self.depth):
-            loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
-            pos, size, f_num = settings
-            operation = lambda x:haar.compute_haar_features(haar.get_integral_image(x), f_num, size, pos)
+            t1 = time.time()
             if i == 0:
                 cur_node = self.head_node
+                loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
+                pos, size, f_num = settings
+                operation = lambda x:haar.compute_haar_feature(haar.get_integral_image(x), f_num, size, pos)
+                cur_node.set_thresh(thresh)
+                cur_node.set_operation(operation)
             else:
-                cur_node = cur_node.left_node
-            cur_node.set_thresh(thresh)
-            cur_node.set_operation(operation)
-
+                if loss > 0:
+                    cur_node = self.add_layer(0)
+                    loss, settings, thresh, dataset, labels = haar.find_best_feature(dataset, labels)
+                    pos, size, f_num = settings
+                    operation = lambda x:haar.compute_haar_feature(haar.get_integral_image(x), f_num, size, pos)
+                    cur_node.set_thresh(thresh)
+                    cur_node.set_operation(operation)
+                else:
+                    continue
+            took_time = time.time() - t1
+            
+            if i == 0:
+                log = open('log.txt','w')
+            else:
+                log = open('log.txt','a')
+            print 'feature{}: thresh={}, loss={}, took {}s'.format(i+1, thresh, loss, took_time)
+            log.write('feature={} pos={} size={} thresh={}\r\n'.format(f_num, pos, size, thresh))
+            log.close()
+             
     def pred(self, x):
         cur_node = self.head_node
         y = cur_node.pred(x)
