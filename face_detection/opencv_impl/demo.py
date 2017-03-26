@@ -19,8 +19,13 @@ if __name__ == '__main__':
 
     # get VideoCapture
     cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+    	print 'Cannot open video {}'.format(video_path)
+    	sys.exit(-1)
     
-    # get fps
+    # get fps and size
+    frame_w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    frame_h = cap.get(CAP_PROP_FRAME_HEIGHT)
     fps = cap.get(cv2.CAP_PROP_FPS)
     if fps == 0:
         fps = 25
@@ -42,7 +47,6 @@ if __name__ == '__main__':
             frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
 
         # detect
-        frame_h, frame_w = frame.shape[:2]
         minSize_ratio = 0.02
         maxSize_ratio = 0.1
         minSize = (int(minSize_ratio*frame_w), int(minSize_ratio*frame_w))
