@@ -11,4 +11,28 @@ class Operator(object):
 	Computations like addiction, substraction, sin, cos, etc.
 	are included.
 	'''
-	def __init__(self):
+	def __init__(self, operation=None):
+		self._operation = operation
+		self.forward = None
+		self.backward = None
+		self._parse(self._operation)
+
+	@property
+	def operation(self):
+		return self._operation
+
+	''' Register operation functions here '''
+	def _parse(self):
+		if self.operation == '+':
+			self.forward = self.add
+		else:
+			raise ValueError('Operation {} has NOT been registered'.format(self.operation))
+
+
+	''' Define all kinds of operations.Both forward and backward '''
+	def forward_add(self, params):
+		return reduce(lambda: x,y:x+y, params)
+
+	def backward_add(self, param):
+		return [param]*input_size
+
