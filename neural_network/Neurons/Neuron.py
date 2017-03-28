@@ -18,7 +18,6 @@ class Neuron(object):
     def __init__(self, neuron_type):
         ''' private '''
         # Variables
-        self._neuron_type = neuron_type
         self._input_size = 0
 
         # Functions
@@ -27,41 +26,34 @@ class Neuron(object):
 
         ''' public '''
         # Variables
-        self.forward_output = None
-        self.backward_output = None
-        self.ops = []
+        self.forward_input = []
+        self.backward_input = []
+        self.forward_output = []
+        self.backward_output = []
+        
+        # TODO: define the computation graph here
+        self.op_flow = {
+            'add1':Operator('+', [])
+        }
 
         # Init
         self._parse(neuron_type)
 
-    @property
-    def neuron_type(self):
-        return self._neuron_type
-
-    @property
-    def input_size(self):
-        return self._input_size
-
     def forward(self, _input):
-        self._input_size = len(_input)
-        self.forward_output = self._forward_func(_input)
+        self.forward_output = []
+        for _i in _input:
+            self.forward_output.append(self._forward_func(_i))
         return self.forward_output
 
     def backward(self, _input):
-        self.backward_output = self._backward_func(_input)
+        self.backward_output = []
+        for _i in _input:
+            self.backward_output.append(self._backward_func(_i))
         return self.backward_output
-
-    ''' Register forward_func here '''
-    def _parse(self, neuron_type):
-        if neuron_type == 'Softmax':
-            self._forward_func = self.forward_softmax
-        if neuron_type == 'Debug':
-            self._forward_func = self.forward_debug
-        else:
-            raise ValueError('Neuron type {} has NOT been registered'.format(neuron_type))
 
     ''' Define all kinds of operations.Both forward and backward '''
     def forward_debug(self, _input):
         # 2*(1 + x)
-        op = Operator('+')
-        self.ops.append(op)
+        op1 = Operator('+', [_input, 1])
+        op2 = Operator('*', [op1, 2])
+        

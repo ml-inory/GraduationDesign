@@ -25,7 +25,6 @@ class Operator(object):
         ''' private '''
         # Variables
         self._operation = operation
-        self._input_size = 0
         self._residual = None
 
         # Functions
@@ -48,9 +47,11 @@ class Operator(object):
     def operation(self):
         return self._operation
 
-    @property
-    def input_size(self):
-        return self._input_size
+    def set_forward_input(self, _input):
+        self.forward_input = _input
+
+    def set_backward_input(self, _input):
+        self.backward_input = _input
 
     def forward(self, _input=None):
         if _input == None:
