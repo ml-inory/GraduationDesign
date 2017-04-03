@@ -2,7 +2,7 @@ from CompNode import *
 import sys
 
 def forward(x):
-    data = CompNode('data', [x], 'data')
+    data = CompNode('data', x, 'data')
     mul1 = CompNode('*', [data, -1], 'mul1')
     exp1 = CompNode('exp', [mul1], 'exp1')
     add1 = CompNode('+', [exp1, 1], 'add1')

@@ -25,6 +25,7 @@ class CompNode(object):
     def __init__(self, operation, operands=None, name=''):
         # Variables
         self._operation = operation
+        self._operands = operands
         self._external_forward_input = None
         self._internal_forward_input = None
         self._internal_constant = None
@@ -38,8 +39,9 @@ class CompNode(object):
         self._backward_func = None
 
         # Init
-        if not self.parse(operation):
+        if not self.parse_operation(operation):
             raise ValueError('Operation {} has NOT been registered'.format(operation))
+        self.parse_input(operands)
 
     @property
     def operation(self):
@@ -71,15 +73,12 @@ class CompNode(object):
         self._forward_output = output
 
     def wrap_forward_input(self, _input):
-        assert isinstance(_input, list)
-        for _i in _input:
-            if isinstance(_input, CompNode):
-                self.set_internal_forward_input(_input.forward_output)
-            else:
-                self.set_internal_forward_input(_input)
-        return self.internal_forward_input
+        if isinstance(_input, CompNode):
+            self._internal_forward_input = _input.forward_output
+        else:
+            self._internal_forward_input = _input
 
-    def parse(self, operation):
+    def parse_operation(self, operation):
         found = False
         for sym, name in self.symbol_dict.items():
             if operation == sym:
@@ -91,13 +90,26 @@ class CompNode(object):
                         break
         return found
 
+    def parse_input(self, operands):
+        if not isinstance(operands, list):
+            operands = [operands]
+        for opr in operands:
+            if isinstance(opr, CompNode) or self.operation == 'data':
+                self._external_forward_input = opr
+                if self.operation == 'data':
+                    self.forward_output = opr
+                else:
+                    self._internal_forward_input = opr.forward_output
+            else:
+                self._internal_constant = opr
+
     def forward(self, _input=None):
         if _input == None:
             if self.external_forward_input == None:
                 raise ValueError('input to CompNode {} has NOT been assigned'.format(self.name))
             _input = self.external_forward_input
-        _input = self.wrap_forward_input(_input)
-        self.forward_output = self._forward_func(_input)
+        self.wrap_forward_input(_input)
+        self.forward_output = self._forward_func()
         return self.forward_output
 
     def backward(self, _residual=None):

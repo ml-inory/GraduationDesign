@@ -32,17 +32,21 @@ class Neuron(object):
         self.backward_output = []
         
         # TODO: define the computation graph here
-        self.op_flow = {
-            'add1':Operator('+', [])
-        }
+        self.comp_graph = {}
 
         # Init
         self._parse(neuron_type)
 
     def forward(self, _input):
+        if not isinstance(_input, list):
+            _input = [_input]
+        self.forward_input = _input
         self.forward_output = []
-        for _i in _input:
-            self.forward_output.append(self._forward_func(_i))
+        for _i in self.forward_input:
+            self.comp_graph['data'].set_forward_input(_i)
+            for name, comp_node in self.comp_graph.items():
+                result = comp_node.forward()
+            self.forward_output.append(result)
         return self.forward_output
 
     def backward(self, _input):
