@@ -85,7 +85,8 @@ int main(int argc, char** argv)
     }
 
 	// Load model
-    ev::Face_Detector detector("../data/model/seeta_fd_frontal_v1.0/bin");
+    const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
+    ev::Face_Detector detector(detection_model_path);
 
     bool need_resize = (img.cols > 1024) || (img.rows > 1024);
     if(need_resize)
@@ -125,7 +126,7 @@ int main(int argc, char** argv)
 			face_rect.width = faces[i].bbox.width;
 			face_rect.height = faces[i].bbox.height;
 
-            cv::rectangle(img, face_rect, CV_RGB(0, 0, 255), 4, 8, 0);
+            cv::rectangle(img, face_rect, CV_RGB(0, 0, 255), 2, 1, 0);
 		}
         
         cv::imshow("Video", img);

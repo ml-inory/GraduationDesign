@@ -25,7 +25,7 @@ namespace ev
     class Face_Detector
     {
         public:
-            Face_Detector(const string model_path="../data/model/seeta_fd_frontal_v1.0.bin", int32_t min_face_size=20, float score_thresh=2.f, float pyramid_scale_factor=0.8f, int32_t window_step=4):
+            Face_Detector(const string model_path="../data/model/seeta_fd_frontal_v1.0.bin", int32_t min_face_size=20/*at least 20*/, int32_t max_face_size=-1/*compute by pyramid_scale_factor*/, float score_thresh=2.f, float pyramid_scale_factor=0.8f, int32_t window_step=4):
                 model_path_(model_path),
                 min_face_size_(min_face_size),
                 score_thresh_(score_thresh),
@@ -33,9 +33,8 @@ namespace ev
                 window_step_(window_step),
                 detector_(new seeta::FaceDetection(model_path.c_str()))
             {
-                //detector_->LoadModel(model_path);
                 detector_->SetMinFaceSize(min_face_size);
-                //detector_->SetMaxFaceSize(max_face_size);
+                detector_->SetMaxFaceSize(max_face_size);
                 detector_->SetScoreThresh(score_thresh);
                 detector_->SetImagePyramidScaleFactor(pyramid_scale_factor);
                 detector_->SetWindowStep(window_step, window_step);
@@ -49,6 +48,26 @@ namespace ev
             void set_min_face_size(int32_t min_face_size)
             {
                 detector_->SetMinFaceSize(min_face_size);
+            }
+
+            void set_max_face_size(int32_t max_face_size)
+            {
+                detector_->SetMaxFaceSize(max_face_size);
+            }
+
+            void set_score_thresh(float score_thresh)
+            {
+                detector_->SetScoreThresh(score_thresh);
+            }
+
+            void set_image_pyramid_scale_factor(float pyramid_scale_factor)
+            {
+                detector_->SetImagePyramidScaleFactor(pyramid_scale_factor);
+            }
+
+            void set_window_step(int32_t x, int32_t y)
+            {
+                detector_->SetWindowStep(x, y);
             }
 
         private:
