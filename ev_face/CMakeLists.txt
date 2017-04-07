@@ -5,19 +5,22 @@ project(ev_face)
 # Use C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
 message(STATUS "C++11 support has been enabled by default.")
 
-include_directories(include)
+# Set include
+include_directories(
+            /usr/include
+            /usr/local/include
+            ./include
+            ./src
+            /home/inory/SeetaFaceEngine/FaceDetection/include
+            /home/inory/SeetaFaceEngine/FaceAlignment/include
+            /home/inory/SeetaFaceEngine/FaceIdentification/include
+            )
 
-# Set seetaface include
-set(src_directory 
-    /home/inory/SeetaFaceEngine/FaceDetection/include
-    )
-list(APPEND src_directory /home/inory/SeetaFaceEngine/FaceAlignment/include)
-list(APPEND src_directory /home/inory/SeetaFaceEngine/FaceIdentification/include)
-include_directories(${src_directory})
-
-# Set seetaface libs
+# Set libs
 set(facedet_required_libs /home/inory/SeetaFaceEngine/FaceDetection/build/libseeta_facedet_lib.so)
 list(APPEND facedet_required_libs /home/inory/SeetaFaceEngine/FaceAlignment/build/libseeta_fa_lib.so)
 list(APPEND facedet_required_libs /home/inory/SeetaFaceEngine/FaceIdentification/build/libviplnet.so)
@@ -31,5 +34,10 @@ else()
     list(APPEND facedet_required_libs ${OpenCV_LIBS})
 endif()
 
+find_package(GLOG REQUIRED)
+
 add_executable(ev_face ./main.cpp)
-target_link_libraries(ev_face ${facedet_required_libs})
+target_link_libraries(ev_face 
+            ${facedet_required_libs}
+            ${GLOG_LIBRARIES}
+            )
