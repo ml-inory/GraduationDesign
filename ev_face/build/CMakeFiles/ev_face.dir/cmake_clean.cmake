@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ev_face.dir/main.cpp.o"
+  "CMakeFiles/ev_face.dir/src/Cap_Controller.cpp.o"
   "ev_face.pdb"
   "ev_face"
 )

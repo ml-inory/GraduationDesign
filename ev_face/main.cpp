@@ -16,12 +16,19 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
-#include "seetaface.h"
+#include "Cap_Controller.hpp"
+#include "Seetaface.hpp"
 
 using namespace std;
 using namespace cv;
 
-bool init_glog()
+enum class Message
+{
+    OK = 0,
+    ERROR_CAP_OPEN = 1
+};
+
+void init_glog()
 {
     google::InitGoogleLogging("");
     google::SetStderrLogging(google::GLOG_INFO);
@@ -42,76 +49,60 @@ int main(int argc, char** argv)
 	if(argc < 2)
 	{
 		cout << "Usage: " << argv[0]
-			 << "video_path" << endl;
+			 << "video_path/camera_id" << endl;
 	}
 
-    const string prefix = "../data/video/";
-	const string video_path = prefix + argv[1];
+    ev::Cap_Controller cap;
+    cap.set_resize_thresh(1024);
+    cap.set_resize_factor(0.5, 0.5);
+    // Open video
+    if(strlen(argv[1]) == 1)
+        cap.open(atoi(argv[1]));
+    else
+        cap.open(argv[1]);
 
-    cv::VideoCapture cap;
-    int camera_id = -1;
-    string str_video_src;
-	if(video_path.size() == 1)
+    if(!cap.isOpened())
     {
-        camera_id = atoi(video_path.c_str());
-		cap.open(camera_id); // open camera
-        char str_camera_id[1];
-        sprintf(str_camera_id, "%d", camera_id);
-        str_video_src = string("camera_id: ") + str_camera_id;
-        LOG_IF(INFO, cap.isOpened()) << "Open camera. camera_id = " << camera_id;
-    }
-	else
-    {
-		cap.open(video_path); // open video
-        str_video_src = string("video_path: ") + video_path;
-        LOG_IF(INFO, cap.isOpened()) << "Open video. video_path = " << video_path;
+        LOG_IF(ERROR, cap.is_opened_camera()) << "Cannot open camera, camera_id = " << cap.get_camera_id();
+        LOG_IF(ERROR, !cap.is_opened_camera()) << "Cannot open video, video_path = " << cap.get_video_path();
+        return (int)Message::ERROR_CAP_OPEN;
     }
 
-	if(!cap.isOpened())
-	{
-		LOG(ERROR) << "Cannot open " << str_video_src;
-        return -1;
-	}
+    LOG_IF(INFO, cap.is_opened_camera()) << "Opened camera. camera_id = " << cap.get_camera_id();
+    LOG_IF(INFO, !cap.is_opened_camera()) << "Opened video. video_path = " << cap.get_video_path(); 
 	
-	Mat img, img_gray;
-    int try_times = 5;
-    int error_count = 0;
-	while(!cap.read(img))
-    {
-        error_count ++;
-        LOG(WARNING) << "read frame failed, retry " << error_count << "/" << try_times;
-        LOG_IF(ERROR, error_count >= try_times) << "Cannot read any frame from" << str_video_src;
-        return -1;
-    }
-
 	// Load model
     const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
     ev::Face_Detector detector(detection_model_path);
 
-    bool need_resize = (img.cols > 1024) || (img.rows > 1024);
+    /*bool need_resize = (img.cols > 1024) || (img.rows > 1024);
     if(need_resize)
     {
         LOG(INFO) << "image too big, need resize";
         cv::resize(img, img, cv::Size(0,0), 0.5, 0.5);
     }
-    LOG(INFO) << "image size: width = " << img.cols << " height = " << img.rows;
-	seeta::ImageData img_data;
-	img_data.width = img.cols;
-	img_data.height = img.rows;
-	img_data.num_channels = 1;
+    */
+    //LOG(INFO) << "image size: width = " << cap.get_frame_width() << " height = " << cap.get_frame_height();
+
 
 	// read frame
+    cv::Mat img, img_gray;
     cv::namedWindow("Video");
 	while(true)
 	{
+        LOG(INFO) << "hahaaha";
 		if(!cap.read(img)) continue;
-	    if(need_resize)     cv::resize(img, img, cv::Size(0,0), 0.5, 0.5);
+	    //if(need_resize)     cv::resize(img, img, cv::Size(0,0), 0.5, 0.5);
 		if(img.channels() != 1)
 			cvtColor(img, img_gray, COLOR_BGR2GRAY);
 		else
 			img_gray = img;
 
 		// detect
+        seeta::ImageData img_data;
+        img_data.width = img.cols;
+        img_data.height = img.rows;
+        img_data.num_channels = 1;
 		img_data.data = img_gray.data;
         
 		std::vector<seeta::FaceInfo> faces = detector.detect(img_data);
@@ -135,4 +126,5 @@ int main(int argc, char** argv)
 		if(key == 'q')
 			break;
 	}
+    return (int)Message::OK;
 }

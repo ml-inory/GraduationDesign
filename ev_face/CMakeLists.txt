@@ -5,6 +5,7 @@ project(ev_face)
 # Use C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 message(STATUS "C++11 support has been enabled by default.")
@@ -14,7 +15,6 @@ include_directories(
             /usr/include
             /usr/local/include
             ./include
-            ./src
             /home/inory/SeetaFaceEngine/FaceDetection/include
             /home/inory/SeetaFaceEngine/FaceAlignment/include
             /home/inory/SeetaFaceEngine/FaceIdentification/include
@@ -36,7 +36,10 @@ endif()
 
 find_package(GLOG REQUIRED)
 
-add_executable(ev_face ./main.cpp)
+aux_source_directory(. EV_FACE_SRC)
+aux_source_directory(./src EV_FACE_SRC)
+
+add_executable(ev_face ${EV_FACE_SRC})
 target_link_libraries(ev_face 
             ${facedet_required_libs}
             ${GLOG_LIBRARIES}

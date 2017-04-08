@@ -5,8 +5,8 @@
 	> Created Time: Sun 07 Apr 2017 10:48:38 PM PDT
  ************************************************************************/
 
-#ifndef SEETAFACE_H
-#define SEETAFACE_H
+#ifndef Seetaface_hpp
+#define Seetaface_hpp
 
 #include <cstdint>
 #include <cstdlib>

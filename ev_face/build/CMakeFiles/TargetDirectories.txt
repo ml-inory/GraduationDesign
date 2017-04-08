@@ -1,1 +1,3 @@
+/home/inory/GraduationDesign/ev_face/build/CMakeFiles/rebuild_cache.dir
+/home/inory/GraduationDesign/ev_face/build/CMakeFiles/edit_cache.dir
 /home/inory/GraduationDesign/ev_face/build/CMakeFiles/ev_face.dir

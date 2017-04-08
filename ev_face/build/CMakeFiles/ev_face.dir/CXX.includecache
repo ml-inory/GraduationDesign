@@ -6,7 +6,17 @@
 
 #IncludeRegexTransform: 
 
-.././include/seetaface.h
+.././include/Cap_Controller.hpp
+string
+-
+opencv2/core/core.hpp
+.././include/opencv2/core/core.hpp
+opencv2/highgui/highgui.hpp
+.././include/opencv2/highgui/highgui.hpp
+opencv2/imgproc/imgproc.hpp
+.././include/opencv2/imgproc/imgproc.hpp
+
+.././include/Seetaface.hpp
 cstdint
 -
 cstdlib
@@ -45,8 +55,16 @@ opencv2/highgui/highgui.hpp
 /home/inory/GraduationDesign/ev_face/opencv2/highgui/highgui.hpp
 opencv2/imgproc/imgproc.hpp
 /home/inory/GraduationDesign/ev_face/opencv2/imgproc/imgproc.hpp
-seetaface.h
-/home/inory/GraduationDesign/ev_face/seetaface.h
+Cap_Controller.hpp
+/home/inory/GraduationDesign/ev_face/Cap_Controller.hpp
+Seetaface.hpp
+/home/inory/GraduationDesign/ev_face/Seetaface.hpp
+
+/home/inory/GraduationDesign/ev_face/src/Cap_Controller.cpp
+Cap_Controller.hpp
+/home/inory/GraduationDesign/ev_face/src/Cap_Controller.hpp
+glog/logging.h
+-
 
 /home/inory/SeetaFaceEngine/FaceDetection/include/classifier.h
 common.h
@@ -76,6 +94,8 @@ util/image_pyramid.h
 cstdint
 -
 vector
+-
+string
 -
 common.h
 /home/inory/SeetaFaceEngine/FaceDetection/include/common.h
@@ -121,44 +141,6 @@ cstring
 -
 common.h
 /home/inory/SeetaFaceEngine/FaceDetection/include/util/common.h
-
-/usr/local/include/glog/log_severity.h
-
-/usr/local/include/glog/logging.h
-errno.h
--
-string.h
--
-time.h
--
-iosfwd
--
-ostream
--
-sstream
--
-string
--
-unistd.h
--
-vector
--
-stdint.h
--
-sys/types.h
--
-inttypes.h
--
-gflags/gflags.h
--
-glog/log_severity.h
-/usr/local/include/glog/glog/log_severity.h
-glog/vlog_is_on.h
-/usr/local/include/glog/glog/vlog_is_on.h
-
-/usr/local/include/glog/vlog_is_on.h
-glog/log_severity.h
-/usr/local/include/glog/glog/log_severity.h
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
@@ -617,4 +599,14 @@ opencv2/opencv.hpp
 /usr/local/include/opencv2/videoio/videoio_c.h
 opencv2/core/core_c.h
 /usr/local/include/opencv2/videoio/opencv2/core/core_c.h
+
+/usr/local/include/opencv2/xfeatures2d.hpp
+opencv2/features2d.hpp
+/usr/local/include/opencv2/opencv2/features2d.hpp
+opencv2/xfeatures2d/nonfree.hpp
+/usr/local/include/opencv2/opencv2/xfeatures2d/nonfree.hpp
+
+/usr/local/include/opencv2/xfeatures2d/nonfree.hpp
+opencv2/features2d.hpp
+/usr/local/include/opencv2/xfeatures2d/opencv2/features2d.hpp
 
