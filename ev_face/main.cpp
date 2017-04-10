@@ -74,7 +74,9 @@ int main(int argc, char** argv)
 	
 	// Load model
     const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
+    const string alignment_model_path = "../data/model/seeta_fd_v1.1.bin";
     ev::Face_Detector detector(detection_model_path);
+    ev::Face_Aligner aligner(alignment_model_path);
 
     cv::Mat tmp;
     while(!cap.read(tmp));
