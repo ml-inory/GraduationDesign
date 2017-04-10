@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 	}
 
     ev::Cap_Controller cap;
+    cap.set_force_resize(true);
     cap.set_resize_thresh(1024);
     cap.set_resize_factor(0.5, 0.5);
     // Open video
@@ -75,26 +76,20 @@ int main(int argc, char** argv)
     const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
     ev::Face_Detector detector(detection_model_path);
 
-    /*bool need_resize = (img.cols > 1024) || (img.rows > 1024);
-    if(need_resize)
-    {
-        LOG(INFO) << "image too big, need resize";
-        cv::resize(img, img, cv::Size(0,0), 0.5, 0.5);
-    }
-    */
-    //LOG(INFO) << "image size: width = " << cap.get_frame_width() << " height = " << cap.get_frame_height();
-
-
 	// read frame
     cv::Mat img, img_gray;
     cv::namedWindow("Video");
 	while(true)
 	{
-        LOG(INFO) << "hahaaha";
-		if(!cap.read(img)) continue;
+		if(!cap.read(img))
+        {
+            LOG(WARNING) << "Got no image";
+            continue;
+        }
+        //LOG(INFO) << "Read " << cap.get_pos_frame() << " frame";
 	    //if(need_resize)     cv::resize(img, img, cv::Size(0,0), 0.5, 0.5);
 		if(img.channels() != 1)
-			cvtColor(img, img_gray, COLOR_BGR2GRAY);
+			cv::cvtColor(img, img_gray, cv::COLOR_BGR2GRAY);
 		else
 			img_gray = img;
 
@@ -104,7 +99,7 @@ int main(int argc, char** argv)
         img_data.height = img.rows;
         img_data.num_channels = 1;
 		img_data.data = img_gray.data;
-        
+
 		std::vector<seeta::FaceInfo> faces = detector.detect(img_data);
 
 		cv::Rect face_rect;
@@ -122,7 +117,7 @@ int main(int argc, char** argv)
         
         cv::imshow("Video", img);
 
-		char key = cv::waitKey(40);
+		char key = cv::waitKey(1);
 		if(key == 'q')
 			break;
 	}
