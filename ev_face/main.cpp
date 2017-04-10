@@ -76,7 +76,14 @@ int main(int argc, char** argv)
     const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
     ev::Face_Detector detector(detection_model_path);
 
-	// read frame
+    cv::Mat tmp;
+    while(!cap.read(tmp));
+    seeta::ImageData img_data;
+    img_data.width = tmp.cols;
+    img_data.height = tmp.rows;
+    img_data.num_channels = 1;
+
+    // read frame
     cv::Mat img, img_gray;
     cv::namedWindow("Video");
 	while(true)
@@ -94,10 +101,6 @@ int main(int argc, char** argv)
 			img_gray = img;
 
 		// detect
-        seeta::ImageData img_data;
-        img_data.width = img.cols;
-        img_data.height = img.rows;
-        img_data.num_channels = 1;
 		img_data.data = img_gray.data;
 
 		std::vector<seeta::FaceInfo> faces = detector.detect(img_data);

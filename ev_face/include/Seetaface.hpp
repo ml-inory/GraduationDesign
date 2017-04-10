@@ -14,11 +14,13 @@
 #include <memory>
 #include <fstream>
 #include <glog/logging.h>
-#include "fust.h"
-#include "detector.h"
+
+#include "common.h"
 #include "face_detection.h"
+#include "face_alignment.h"
 
 using namespace std;
+using namespace seeta;
 
 namespace ev
 {
@@ -78,6 +80,49 @@ namespace ev
             float pyramid_scale_factor_;
             int32_t window_step_;
             std::shared_ptr<seeta::FaceDetection> detector_;
+    };
+
+
+    class Face_Aligner
+    {
+        public:
+            Face_Aligner(const string model_path="../data/model/seeta_fa_frontal_v1.0.bin"):
+                model_path_(model_path),
+                aligner_(new seeta::FaceAlignment(model_path.c_str()))
+            {
+            }
+
+            bool detect_landmarks(ImageData gray_im, FaceInfo face_info, FacialLandmark* points)
+            {
+                return aligner_->PointDetectLandmarks(gray_im, face_info, points);
+            }
+
+            bool detect_multi_landmarks(ImageData gray_im, std::vector<FaceInfo> face_infos, std::vector<FacialLandmark*> points)
+            {
+                if(gray_im.num_channels != 1)   return false;
+                if(face_infos.size() != points.size() / 5)  return false;
+                int face_num = face_infos.size();
+                const int pts_num = 5;
+
+                for(int i = 0; i < face_num; i++)
+                {
+                    float* facial_loc = new float[pts_num * 2];
+                    detect_landmarks(gray_im, face_infos[i], facial_loc);
+                    
+                    for(int j = 0; j < pts_num; j++)
+                    {
+                        points[i * pts_num + j].x = facial_loc[j * 2];
+                        points[i * pts_num + j].y = facial_loc[j * 2 + 1];
+                    }
+                }
+                delete[] facial_loc;
+
+                return true;
+            }
+
+        private:
+            string model_path_;
+            std::shared_ptr<seeta::FaceAlignment> aligner_;
     };
 }
 

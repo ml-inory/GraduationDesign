@@ -167,6 +167,7 @@ void ev::Cap_Controller::set_force_resize(bool flag)
     force_not_resize_ = !flag;
     force_resize_ = flag;
 }
+
 // private
 void ev::Cap_Controller::check_if_need_resize()
 {

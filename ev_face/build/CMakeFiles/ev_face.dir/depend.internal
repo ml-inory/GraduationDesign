@@ -5,14 +5,8 @@ CMakeFiles/ev_face.dir/main.cpp.o
  .././include/Cap_Controller.hpp
  .././include/Seetaface.hpp
  /home/inory/GraduationDesign/ev_face/main.cpp
- /home/inory/SeetaFaceEngine/FaceDetection/include/classifier.h
  /home/inory/SeetaFaceEngine/FaceDetection/include/common.h
- /home/inory/SeetaFaceEngine/FaceDetection/include/detector.h
  /home/inory/SeetaFaceEngine/FaceDetection/include/face_detection.h
- /home/inory/SeetaFaceEngine/FaceDetection/include/feature_map.h
- /home/inory/SeetaFaceEngine/FaceDetection/include/fust.h
- /home/inory/SeetaFaceEngine/FaceDetection/include/model_reader.h
- /home/inory/SeetaFaceEngine/FaceDetection/include/util/image_pyramid.h
  /usr/local/include/opencv/cxcore.h
  /usr/local/include/opencv2/calib3d.hpp
  /usr/local/include/opencv2/calib3d/calib3d_c.h

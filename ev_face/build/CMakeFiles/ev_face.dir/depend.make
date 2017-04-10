@@ -4,14 +4,8 @@
 CMakeFiles/ev_face.dir/main.cpp.o: .././include/Cap_Controller.hpp
 CMakeFiles/ev_face.dir/main.cpp.o: .././include/Seetaface.hpp
 CMakeFiles/ev_face.dir/main.cpp.o: ../main.cpp
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/classifier.h
 CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/common.h
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/detector.h
 CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/face_detection.h
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/feature_map.h
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/fust.h
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/model_reader.h
-CMakeFiles/ev_face.dir/main.cpp.o: /home/inory/SeetaFaceEngine/FaceDetection/include/util/image_pyramid.h
 CMakeFiles/ev_face.dir/main.cpp.o: /usr/local/include/opencv/cxcore.h
 CMakeFiles/ev_face.dir/main.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 CMakeFiles/ev_face.dir/main.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
