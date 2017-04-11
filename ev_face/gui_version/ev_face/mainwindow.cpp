@@ -9,12 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     init_glog();
     init_cap();
-
-    /* Connect slots */
-    // menuBar
-    connect(ui->action_open_video, SIGNAL(triggered()), this, SLOT(on_action_open_video_triggered()));
-    connect(ui->action_open_camera, SIGNAL(triggered()), this, SLOT(on_action_open_camera_triggered()));
-    connect(ui->action_exit, SIGNAL(triggered()), this, SLOT(on_action_exit_triggered()));
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +60,6 @@ void MainWindow::on_action_open_video_triggered()   // 打开视频
             QMessageBox::warning(this, "Error", QString("Cannot open ") + file_path, QMessageBox::Yes);
         }
     }
-    file_dialog->close();
 }
 
 void MainWindow::on_action_open_camera_triggered()  // 打开摄像头
@@ -79,4 +72,11 @@ void MainWindow::on_action_exit_triggered() // 关闭窗口
     this->close();
 }
 
+void MainWindow::on_video_backward_clicked()
+{
+    // Playback video
+    if(cap_.isOpened())
+    {
 
+    }
+}

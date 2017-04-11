@@ -60,6 +60,7 @@ namespace ev
             void set_force_resize(bool flag);
 
 
+            int pos_frame = 0;
 		private:
             void check_if_need_resize();
             cv::Mat auto_resize(cv::Mat& img);
@@ -67,7 +68,6 @@ namespace ev
             string video_path_;
             
             int camera_id_ = -1;
-            int pos_frame_ = 0;
             
             bool is_opened_camera_;
             bool need_resize_ = false;
