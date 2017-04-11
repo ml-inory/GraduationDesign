@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 	
 	// Load model
     const string detection_model_path = "../data/model/seeta_fd_frontal_v1.0.bin";
-    const string alignment_model_path = "../data/model/seeta_fd_v1.1.bin";
+    const string alignment_model_path = "../data/model/seeta_fa_v1.1.bin";
     ev::Face_Detector detector(detection_model_path);
     ev::Face_Aligner aligner(alignment_model_path);
 
@@ -106,19 +106,34 @@ int main(int argc, char** argv)
 		img_data.data = img_gray.data;
 
 		std::vector<seeta::FaceInfo> faces = detector.detect(img_data);
-
-		cv::Rect face_rect;
 		int32_t num_face = static_cast<int32_t>(faces.size());
 
-		for (int32_t i = 0; i < num_face; i++) 
+		cv::Rect face_rect;
+
+		for (int i = 0; i < num_face; i++) 
 		{
 			face_rect.x = faces[i].bbox.x;
 			face_rect.y = faces[i].bbox.y;
 			face_rect.width = faces[i].bbox.width;
 			face_rect.height = faces[i].bbox.height;
-
+            LOG(INFO) << "score: " << faces[i].score;
             cv::rectangle(img, face_rect, CV_RGB(0, 0, 255), 2, 1, 0);
 		}
+        
+        // align
+        if(num_face > 0)
+        {
+            seeta::FacialLandmark points[5*num_face];
+            bool align_ret = aligner.detect_multi_landmarks(img_data, faces, points);
+        
+            if(align_ret)
+            {
+                for(int i = 0; i < 5*num_face; i++)
+                {
+                    cv::circle(img, cv::Point(points[i].x, points[i].y), 2, CV_RGB(0,255,0), CV_FILLED);
+                }
+            }
+        }
         
         cv::imshow("Video", img);
 

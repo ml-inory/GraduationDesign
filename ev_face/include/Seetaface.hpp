@@ -86,7 +86,7 @@ namespace ev
     class Face_Aligner
     {
         public:
-            Face_Aligner(const string model_path="../data/model/seeta_fa_frontal_v1.0.bin"):
+            Face_Aligner(const string model_path="../data/model/seeta_fa_v1.1.bin"):
                 model_path_(model_path),
                 aligner_(new seeta::FaceAlignment(model_path.c_str()))
             {
@@ -97,25 +97,28 @@ namespace ev
                 return aligner_->PointDetectLandmarks(gray_im, face_info, points);
             }
 
-            bool detect_multi_landmarks(ImageData gray_im, std::vector<FaceInfo> face_infos, std::vector<FacialLandmark*> points)
+            bool detect_multi_landmarks(ImageData gray_im, std::vector<FaceInfo> face_infos, FacialLandmark* points)
             {
-                if(gray_im.num_channels != 1)   return false;
-                if(face_infos.size() != points.size() / 5)  return false;
+                if(gray_im.num_channels != 1)
+                {
+                    LOG(ERROR) << "Input image must be grayscale";
+                    return false;
+                }
                 int face_num = face_infos.size();
                 const int pts_num = 5;
 
+                FacialLandmark* pt5 = new FacialLandmark[pts_num];
                 for(int i = 0; i < face_num; i++)
                 {
-                    float* facial_loc = new float[pts_num * 2];
-                    detect_landmarks(gray_im, face_infos[i], facial_loc);
+                    detect_landmarks(gray_im, face_infos[i], pt5);
                     
                     for(int j = 0; j < pts_num; j++)
                     {
-                        points[i * pts_num + j].x = facial_loc[j * 2];
-                        points[i * pts_num + j].y = facial_loc[j * 2 + 1];
+                        points[i * pts_num + j].x = pt5[j].x;
+                        points[i * pts_num + j].y = pt5[j].y;
                     }
                 }
-                delete[] facial_loc;
+                delete pt5;
 
                 return true;
             }

@@ -5,6 +5,7 @@ CMakeFiles/ev_face.dir/main.cpp.o
  .././include/Cap_Controller.hpp
  .././include/Seetaface.hpp
  /home/inory/GraduationDesign/ev_face/main.cpp
+ /home/inory/SeetaFaceEngine/FaceAlignment/include/face_alignment.h
  /home/inory/SeetaFaceEngine/FaceDetection/include/common.h
  /home/inory/SeetaFaceEngine/FaceDetection/include/face_detection.h
  /usr/local/include/opencv/cxcore.h

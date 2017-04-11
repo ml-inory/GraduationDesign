@@ -29,8 +29,12 @@ fstream
 -
 glog/logging.h
 -
+common.h
+.././include/common.h
 face_detection.h
 .././include/face_detection.h
+face_alignment.h
+.././include/face_alignment.h
 
 /home/inory/GraduationDesign/ev_face/main.cpp
 cstdint
@@ -61,6 +65,12 @@ Cap_Controller.hpp
 /home/inory/GraduationDesign/ev_face/src/Cap_Controller.hpp
 glog/logging.h
 -
+
+/home/inory/SeetaFaceEngine/FaceAlignment/include/face_alignment.h
+cstdlib
+-
+common.h
+/home/inory/SeetaFaceEngine/FaceAlignment/include/common.h
 
 /home/inory/SeetaFaceEngine/FaceDetection/include/common.h
 cstdint
