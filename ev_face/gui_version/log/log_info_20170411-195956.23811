@@ -1,0 +1,4 @@
+Log file created at: 2017/04/11 19:59:56
+Running on machine: inory-desktop
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0411 19:59:56.801969 23811 mainwindow.cpp:48] Video path/home/inory/1.mp4

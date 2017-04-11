@@ -1,0 +1,5 @@
+Log file created at: 2017/04/11 19:33:50
+Running on machine: inory-desktop
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0411 19:33:50.640673 22417 mainwindow.cpp:50] Video path/home/inory/1.mp4
+I0411 19:33:57.290599 22417 mainwindow.cpp:50] Video path/home/inory/GraduationDesign/ev_face/gui_version/build-ev_face-Desktop_Qt_5_6_2_GCC_64bit-Debug/Cap_Controller.o

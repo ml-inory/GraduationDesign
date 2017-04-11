@@ -33,7 +33,7 @@ namespace ev
             bool open(const char* video_path);
             bool open(const int camera_id);
 
-            bool read(cv::Mat& img);
+            bool read(cv::Mat& img, bool flip_channel=false);
             bool isOpened();
             bool set(int prop_id, double value);
             double get(int prop_id);
