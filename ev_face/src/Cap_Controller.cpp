@@ -82,7 +82,7 @@ bool ev::Cap_Controller::read(cv::Mat& img, bool flip_channel)
 {
     bool ret = cap_.read(origin_frame_);
     if(flip_channel)    cv::cvtColor(origin_frame_, origin_frame_, COLOR_BGR2RGB);
-    pos_frame_ = cap_.get(cv::CAP_PROP_POS_FRAMES);
+    pos_frame = cap_.get(cv::CAP_PROP_POS_FRAMES);
     //LOG(INFO) << "Read frame " << pos_frame_;
     if(!force_not_resize_ && !force_resize_)
         check_if_need_resize();
@@ -98,6 +98,7 @@ bool ev::Cap_Controller::isOpened()
 
 bool ev::Cap_Controller::set(int prop_id, double value)
 {
+	if(cv::CAP_PROP_POS_FRAMES == prop_id)	pos_frame = value;
     return cap_.set(prop_id, value);
 }
 

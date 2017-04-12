@@ -25,9 +25,11 @@ public:
 private slots:
     void on_action_exit_triggered();
 
+    void on_action_open_camera_triggered();
+
     void on_action_open_video_triggered();
 
-    void on_action_open_camera_triggered();
+    void on_video_backward_clicked();
 
     void on_video_backward_clicked();
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.2
+** Created by: Qt User Interface Compiler version 4.8.7
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,21 +10,21 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSlider>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QMainWindow>
+#include <QtGui/QMenu>
+#include <QtGui/QMenuBar>
+#include <QtGui/QPushButton>
+#include <QtGui/QSlider>
+#include <QtGui/QStatusBar>
+#include <QtGui/QTabWidget>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -54,25 +54,25 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QStringLiteral("MainWindow"));
+            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(823, 534);
         action_open_video = new QAction(MainWindow);
-        action_open_video->setObjectName(QStringLiteral("action_open_video"));
+        action_open_video->setObjectName(QString::fromUtf8("action_open_video"));
         action_open_camera = new QAction(MainWindow);
-        action_open_camera->setObjectName(QStringLiteral("action_open_camera"));
+        action_open_camera->setObjectName(QString::fromUtf8("action_open_camera"));
         action_exit = new QAction(MainWindow);
-        action_exit->setObjectName(QStringLiteral("action_exit"));
+        action_exit->setObjectName(QString::fromUtf8("action_exit"));
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout_2 = new QHBoxLayout(centralWidget);
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         video_label = new QLabel(centralWidget);
-        video_label->setObjectName(QStringLiteral("video_label"));
+        video_label->setObjectName(QString::fromUtf8("video_label"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -83,27 +83,31 @@ public:
         verticalLayout->addWidget(video_label);
 
         video_slider = new QSlider(centralWidget);
+<<<<<<< HEAD
         video_slider->setObjectName(QStringLiteral("video_slider"));
         video_slider->setMaximum(99);
+=======
+        video_slider->setObjectName(QString::fromUtf8("video_slider"));
+>>>>>>> 8ae0334b77bfd91550d1d64fb870f8530598d377
         video_slider->setOrientation(Qt::Horizontal);
 
         verticalLayout->addWidget(video_slider);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         video_backward = new QPushButton(centralWidget);
-        video_backward->setObjectName(QStringLiteral("video_backward"));
+        video_backward->setObjectName(QString::fromUtf8("video_backward"));
 
         horizontalLayout->addWidget(video_backward);
 
         video_play_pause = new QPushButton(centralWidget);
-        video_play_pause->setObjectName(QStringLiteral("video_play_pause"));
+        video_play_pause->setObjectName(QString::fromUtf8("video_play_pause"));
 
         horizontalLayout->addWidget(video_play_pause);
 
         video_forward = new QPushButton(centralWidget);
-        video_forward->setObjectName(QStringLiteral("video_forward"));
+        video_forward->setObjectName(QString::fromUtf8("video_forward"));
 
         horizontalLayout->addWidget(video_forward);
 
@@ -114,15 +118,15 @@ public:
         horizontalLayout_2->addLayout(verticalLayout);
 
         tabWidget = new QTabWidget(centralWidget);
-        tabWidget->setObjectName(QStringLiteral("tabWidget"));
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         Detection = new QWidget();
-        Detection->setObjectName(QStringLiteral("Detection"));
+        Detection->setObjectName(QString::fromUtf8("Detection"));
         tabWidget->addTab(Detection, QString());
         Align = new QWidget();
-        Align->setObjectName(QStringLiteral("Align"));
+        Align->setObjectName(QString::fromUtf8("Align"));
         tabWidget->addTab(Align, QString());
         Identify = new QWidget();
-        Identify->setObjectName(QStringLiteral("Identify"));
+        Identify->setObjectName(QString::fromUtf8("Identify"));
         tabWidget->addTab(Identify, QString());
 
         horizontalLayout_2->addWidget(tabWidget);
@@ -131,13 +135,13 @@ public:
         horizontalLayout_2->setStretch(1, 1);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 823, 20));
         menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuFile->setObjectName(QString::fromUtf8("menuFile"));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
@@ -155,21 +159,21 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        action_open_video->setText(QApplication::translate("MainWindow", "Open Video", 0));
-        action_open_camera->setText(QApplication::translate("MainWindow", "Open Camera", 0));
-        action_exit->setText(QApplication::translate("MainWindow", "Close", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        action_open_video->setText(QApplication::translate("MainWindow", "Open Video", 0, QApplication::UnicodeUTF8));
+        action_open_camera->setText(QApplication::translate("MainWindow", "Open Camera", 0, QApplication::UnicodeUTF8));
+        action_exit->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
         video_label->setText(QString());
-        video_backward->setText(QApplication::translate("MainWindow", "<<", 0));
-        video_backward->setShortcut(QApplication::translate("MainWindow", "Left", 0));
-        video_play_pause->setText(QApplication::translate("MainWindow", "Play", 0));
-        video_play_pause->setShortcut(QApplication::translate("MainWindow", "Space", 0));
-        video_forward->setText(QApplication::translate("MainWindow", ">>", 0));
-        video_forward->setShortcut(QApplication::translate("MainWindow", "Right", 0));
-        tabWidget->setTabText(tabWidget->indexOf(Detection), QApplication::translate("MainWindow", "Detection", 0));
-        tabWidget->setTabText(tabWidget->indexOf(Align), QApplication::translate("MainWindow", "Align", 0));
-        tabWidget->setTabText(tabWidget->indexOf(Identify), QApplication::translate("MainWindow", "Identify", 0));
-        menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        video_backward->setText(QApplication::translate("MainWindow", "<<", 0, QApplication::UnicodeUTF8));
+        video_backward->setShortcut(QApplication::translate("MainWindow", "Left", 0, QApplication::UnicodeUTF8));
+        video_play_pause->setText(QApplication::translate("MainWindow", "Play", 0, QApplication::UnicodeUTF8));
+        video_play_pause->setShortcut(QApplication::translate("MainWindow", "Space", 0, QApplication::UnicodeUTF8));
+        video_forward->setText(QApplication::translate("MainWindow", ">>", 0, QApplication::UnicodeUTF8));
+        video_forward->setShortcut(QApplication::translate("MainWindow", "Right", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(Detection), QApplication::translate("MainWindow", "Detection", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(Align), QApplication::translate("MainWindow", "Align", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(Identify), QApplication::translate("MainWindow", "Identify", 0, QApplication::UnicodeUTF8));
+        menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

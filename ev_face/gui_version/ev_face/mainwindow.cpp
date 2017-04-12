@@ -70,7 +70,6 @@ void MainWindow::on_action_open_video_triggered()   // 打开视频
             QMessageBox::warning(this, "Error", QString("Cannot open ") + file_path, QMessageBox::Yes);
         }
     }
-    file_dialog->close();
 }
 
 void MainWindow::on_action_open_camera_triggered()  // 打开摄像头
