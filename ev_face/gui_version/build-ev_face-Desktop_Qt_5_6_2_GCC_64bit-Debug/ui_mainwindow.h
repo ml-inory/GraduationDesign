@@ -83,12 +83,8 @@ public:
         verticalLayout->addWidget(video_label);
 
         video_slider = new QSlider(centralWidget);
-<<<<<<< HEAD
-        video_slider->setObjectName(QStringLiteral("video_slider"));
-        video_slider->setMaximum(99);
-=======
         video_slider->setObjectName(QString::fromUtf8("video_slider"));
->>>>>>> 8ae0334b77bfd91550d1d64fb870f8530598d377
+        video_slider->setMaximum(99);
         video_slider->setOrientation(Qt::Horizontal);
 
         verticalLayout->addWidget(video_slider);
