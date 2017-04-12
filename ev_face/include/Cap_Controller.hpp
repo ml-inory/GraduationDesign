@@ -50,6 +50,7 @@ namespace ev
             int get_frame_width();
             int get_frame_height();
             int get_pos_frame();
+            int get_total_frames();
 
             // setter
             void set_resize_thresh(int size_thresh);    // 缩放的阈值，宽或高大于此阈值则需要resize
@@ -68,6 +69,7 @@ namespace ev
             
             int camera_id_ = -1;
             int pos_frame_ = 0;
+            int total_frames_ = 0;
             
             bool is_opened_camera_;
             bool need_resize_ = false;

@@ -29,6 +29,8 @@ private slots:
 
     void on_action_open_camera_triggered();
 
+    void on_video_backward_clicked();
+
 private:
     void init_glog();
     void init_cap();

@@ -48,7 +48,12 @@ bool ev::Cap_Controller::open(const string& video_path)
     video_path_ = video_path;
     camera_id_ = -1;
     is_opened_camera_ = false;
-    return cap_.open(video_path);
+    bool ret = cap_.open(video_path);
+    if(ret)
+    {
+        total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);     
+    }
+    return ret;
 }
 
 bool ev::Cap_Controller::open(const char* video_path)
@@ -56,7 +61,12 @@ bool ev::Cap_Controller::open(const char* video_path)
     video_path_ = string(video_path);
     camera_id_ = -1;
     is_opened_camera_ = false;
-    return cap_.open(video_path);
+    bool ret = cap_.open(video_path);
+    if(ret)
+    {
+        total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);     
+    }
+    return ret;
 }
 
 bool ev::Cap_Controller::open(const int camera_id)
@@ -64,6 +74,7 @@ bool ev::Cap_Controller::open(const int camera_id)
     video_path_ = "";
     camera_id_ = camera_id;
     is_opened_camera_ = true;
+    total_frames_ = -1;
     return cap_.open(camera_id);
 }
 
@@ -128,9 +139,25 @@ int ev::Cap_Controller::get_frame_height()
 
 int ev::Cap_Controller::get_pos_frame()
 {
-    return pos_frame_;
+    if(cap_.isOpened())
+    {
+        cv::Mat tmp;
+        if(read(tmp))
+        {
+            set(cv::CAP_PROP_POS_FRAMES, pos_frame_ - 1);
+            return pos_frame_;
+        }
+        else
+            return -2;
+    }
+    else
+        return -1;
 }
 
+int ev::Cap_Controller::get_total_frames()
+{
+    return total_frames_;
+}
 
 // setter
 void ev::Cap_Controller::set_resize_thresh(int size_thresh)
