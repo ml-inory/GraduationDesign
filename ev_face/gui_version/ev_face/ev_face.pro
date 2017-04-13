@@ -24,9 +24,12 @@ HEADERS  += mainwindow.h \
 
 INCLUDEPATH += ../../include/ \
                /usr/local/include/ \
-               /usr/include/glog/
+               /usr/include/glog/   \
+               /home/inory/SeetaFaceEngine/FaceDetection/include    \
+               /home/inory/SeetaFaceEngine/FaceAlignment/include
 
 LIBS += -L/usr/local/lib/ -lopencv_core -lopencv_highgui -lopencv_videoio -lopencv_imgproc \
-        -L/usr/lib/x86_64-linux-gnu/ -lglog
+        -L/usr/lib/x86_64-linux-gnu/ -lglog \
+        -L../ev_face/lib/ -lseeta_facedet_lib -lseeta_fa_lib
 
 FORMS    += mainwindow.ui

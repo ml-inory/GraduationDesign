@@ -11,6 +11,7 @@
 // external
 #include <glog/logging.h>
 #include "Cap_Controller.hpp"
+#include "Seetaface.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -41,6 +42,8 @@ private slots:
 
     void on_video_play_pause_clicked();
 
+    void on_detection_switch_checkbox_clicked(bool checked);
+
 private:
     void init_glog();
     void init_cap();
@@ -52,6 +55,8 @@ private:
     int fps_;
 
     bool is_playing_ = false;
+
+    const std::string detection_model_path_ = "../../data/model/seeta_fd_frontal_v1.0.bin";
 
     QTimer timer_;
 };

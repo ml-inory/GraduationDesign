@@ -39,7 +39,7 @@ void MainWindow::init_cap()     // 初始化Cap_Controller
     cap_.set_resize_factor(0.5, 0.5);
 }
 
-bool MainWindow::get_frame()
+bool MainWindow::get_frame()    // 读取一帧并显示
 {
     if(cap_.isOpened())
     {
@@ -118,7 +118,7 @@ void MainWindow::on_video_backward_clicked()    // 左移进度条
     }
 }
 
-void MainWindow::on_video_forward_clicked()
+void MainWindow::on_video_forward_clicked()     // 右移进度条
 {
     if(cap_.isOpened() && !cap_.is_opened_camera())
     {
@@ -136,7 +136,7 @@ void MainWindow::on_video_forward_clicked()
     }
 }
 
-void MainWindow::on_video_slider_valueChanged(int position)
+void MainWindow::on_video_slider_valueChanged(int position)     // 移动或拖动进度条
 {
     if(cap_.isOpened())
     {
@@ -153,7 +153,7 @@ void MainWindow::on_video_slider_valueChanged(int position)
     }
 }
 
-void MainWindow::play_video()
+void MainWindow::play_video()       // 播放
 {
     if(cap_.isOpened())
     {
@@ -176,7 +176,7 @@ void MainWindow::play_video()
     }
 }
 
-void MainWindow::on_video_play_pause_clicked()
+void MainWindow::on_video_play_pause_clicked()      // 点播放键
 {
     is_playing_ = !is_playing_;
 
@@ -198,5 +198,24 @@ void MainWindow::on_video_play_pause_clicked()
     else
     {
         timer_.stop();
+    }
+}
+
+void MainWindow::on_detection_switch_checkbox_clicked(bool checked)
+{
+    ui->detection_show_checkbox->setEnabled(checked);
+
+    if(checked)     // start to detect
+    {
+        // register Face_Detector
+        QString model_path = ui->detection_model_lineedit->text();
+        if(!model_path.endsWith(".bin"))
+        {
+            QMessageBox::warning(this, "Error", QString("Model path NOT right!"), QMessageBox::Yes);
+            ui->detection_switch_checkbox->setChecked(false);
+            on_detection_switch_checkbox_clicked(false);
+        }
+        ev::Face_Detector face_detector(model_path.toStdString());
+
     }
 }
