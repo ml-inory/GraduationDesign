@@ -59,6 +59,9 @@ namespace ev
             void set_resize_factor(double x, double y);   // 按比例缩放
             void set_force_not_resize(bool flag);    // 强行不缩放
             void set_force_resize(bool flag);
+            
+            cv::Mat origin_frame_;  // 原始图像
+            cv::Mat resized_frame_; // 缩放后的图像
 
 		private:
             void check_if_need_resize();
@@ -80,8 +83,6 @@ namespace ev
             cv::Size size_thresh_;  // 缩放阈值
             cv::Size resize_size_;  // 缩放具体大小
             cv::Point2f resize_factor_;    // 缩放比例
-            cv::Mat origin_frame_;  // 原始图像
-            cv::Mat resized_frame_; // 缩放后的图像
 			cv::VideoCapture cap_;
 	};
 }

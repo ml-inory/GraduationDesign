@@ -41,6 +41,11 @@ namespace ev
                 detector_->SetImagePyramidScaleFactor(pyramid_scale_factor);
                 detector_->SetWindowStep(window_step, window_step);
             }
+           
+            bool load_model(const char* model_path)
+            {
+                return detector_->LoadModel(model_path);
+            }
 
             std::vector<seeta::FaceInfo> detect(const seeta::ImageData& img_data)
             {

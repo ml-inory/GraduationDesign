@@ -99,6 +99,7 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(video_label->sizePolicy().hasHeightForWidth());
         video_label->setSizePolicy(sizePolicy);
+        video_label->setScaledContents(true);
         video_label->setAlignment(Qt::AlignCenter);
 
         verticalLayout->addWidget(video_label);

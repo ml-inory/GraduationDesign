@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>
+#include <QResizeEvent>
 
 // external
 #include <glog/logging.h>
@@ -44,17 +45,23 @@ private slots:
 
     void on_detection_switch_checkbox_clicked(bool checked);
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 private:
     void init_glog();
     void init_cap();
     bool get_frame();
 
     Ui::MainWindow *ui;
+
     ev::Cap_Controller cap_;
+    ev::Face_Detector face_detector_;
 
     int fps_;
 
     bool is_playing_ = false;
+    bool is_detection_model_loaded_ = false;
 
     const std::string detection_model_path_ = "../../data/model/seeta_fd_frontal_v1.0.bin";
 

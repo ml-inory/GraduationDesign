@@ -43,16 +43,27 @@ bool MainWindow::get_frame()    // 读取一帧并显示
 {
     if(cap_.isOpened())
     {
+        // read frame
         cv::Mat tmp;
+        cv::Mat origin_frame;
         bool ret = cap_.read(tmp, true);      // true means BGR2RGB
-        QImage image = QImage((const unsigned char*)tmp.data, tmp.cols, tmp.rows, QImage::Format_RGB888).scaledToWidth(ui->video_label->width());
+        if(ret) origin_frame = cap_.origin_frame_;
+        else    return false;
+
+        // detection
+        if(is_detection_model_loaded_)
+        {
+
+        }
+
+        QImage image = QImage((const unsigned char*)origin_frame.data, origin_frame.cols, origin_frame.rows, QImage::Format_RGB888).scaledToWidth(ui->video_label->width());
         ui->video_label->setPixmap(QPixmap::fromImage(image));
-        return ret;
+
+        return true;
     }
     else
         return false;
 }
-
 
 
 /* Slots */
@@ -201,7 +212,7 @@ void MainWindow::on_video_play_pause_clicked()      // 点播放键
     }
 }
 
-void MainWindow::on_detection_switch_checkbox_clicked(bool checked)
+void MainWindow::on_detection_switch_checkbox_clicked(bool checked)     // 检测开启
 {
     ui->detection_show_checkbox->setEnabled(checked);
 
@@ -215,7 +226,21 @@ void MainWindow::on_detection_switch_checkbox_clicked(bool checked)
             ui->detection_switch_checkbox->setChecked(false);
             on_detection_switch_checkbox_clicked(false);
         }
-        ev::Face_Detector face_detector(model_path.toStdString());
 
+        const char* c_str_model_path = model_path.toStdString().c_str();
+        if(face_detector_.load_model(c_str_model_path))
+            is_detection_model_loaded_ = true;
+        else
+            is_detection_model_loaded_ = false;
     }
+    else
+    {
+        is_detection_model_loaded_ = false;
+    }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QSize new_size = event->size();
+
 }
