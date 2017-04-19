@@ -56,7 +56,7 @@ private:
     Ui::MainWindow *ui;
 
     ev::Cap_Controller cap_;
-    ev::Face_Detector face_detector_;
+    std::shared_ptr<ev::Face_Detector> face_detector_;
 
     int fps_;
 

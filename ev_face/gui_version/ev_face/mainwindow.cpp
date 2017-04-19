@@ -46,14 +46,32 @@ bool MainWindow::get_frame()    // 读取一帧并显示
         // read frame
         cv::Mat tmp;
         cv::Mat origin_frame;
+        cv::Mat gray_frame;
         bool ret = cap_.read(tmp, true);      // true means BGR2RGB
         if(ret) origin_frame = cap_.origin_frame_;
         else    return false;
 
+        // construct image data
+        seeta::ImageData img_data(origin_frame.cols, origin_frame.rows, 1);
+        cv::cvtColor(origin_frame, gray_frame, cv::COLOR_RGB2GRAY);
+        img_data.data = gray_frame.data;
+
         // detection
         if(is_detection_model_loaded_)
         {
-
+           std::vector<seeta::FaceInfo> faces = face_detector_->detect(img_data);
+           int face_num = static_cast<int>(faces.size());
+           // draw
+           cv::Rect face_rect;
+           for(int i = 0; i < face_num; i++)
+           {
+               face_rect.x = faces[i].bbox.x;
+               face_rect.y = faces[i].bbox.y;
+               face_rect.width = faces[i].bbox.width;
+               face_rect.height = faces[i].bbox.height;
+               LOG(INFO) << "score: " << faces[i].score;
+               cv::rectangle(origin_frame, face_rect, cv::Scalar(255,0,0), 2, 1, 0);
+           }
         }
 
         QImage image = QImage((const unsigned char*)origin_frame.data, origin_frame.cols, origin_frame.rows, QImage::Format_RGB888).scaledToWidth(ui->video_label->width());
@@ -69,6 +87,10 @@ bool MainWindow::get_frame()    // 读取一帧并显示
 /* Slots */
 void MainWindow::on_action_open_video_triggered()   // 打开视频
 {
+    // pause
+    if(is_playing_)
+        on_video_play_pause_clicked();
+    // pop up dialog
     QFileDialog* file_dialog = new QFileDialog(this);
     file_dialog->setWindowTitle(tr("Open Video"));
     file_dialog->setDirectory(".");
@@ -92,7 +114,10 @@ void MainWindow::on_action_open_video_triggered()   // 打开视频
                 total_frames = total_frames / 10;
                 k++;
             }
+            ui->video_slider->setEnabled(true);
             ui->video_slider->setMaximum(std::pow(10, k-1));
+            if(!is_playing_)
+                on_video_play_pause_clicked();
         }
         else
         {
@@ -103,7 +128,23 @@ void MainWindow::on_action_open_video_triggered()   // 打开视频
 
 void MainWindow::on_action_open_camera_triggered()  // 打开摄像头
 {
+    // pause
+    if(is_playing_)
+        on_video_play_pause_clicked();
 
+    cap_.open(0);
+    if(cap_.isOpened())
+    {
+        // init video_label
+        get_frame();
+        fps_ = 1000;
+    }
+    ui->video_slider->setEnabled(false);
+    ui->video_backward->setEnabled(false);
+    ui->video_forward->setEnabled(false);
+
+    if(!is_playing_)
+        on_video_play_pause_clicked();
 }
 
 void MainWindow::on_action_exit_triggered() // 关闭窗口
@@ -196,9 +237,12 @@ void MainWindow::on_video_play_pause_clicked()      // 点播放键
     ui->video_play_pause->setText(btnText);
 
     // disable or enable others
-    ui->video_backward->setEnabled(!is_playing_);
-    ui->video_forward->setEnabled(!is_playing_);
-    ui->video_slider->setEnabled(!is_playing_);
+    if(!cap_.is_opened_camera())
+    {
+        ui->video_backward->setEnabled(!is_playing_);
+        ui->video_forward->setEnabled(!is_playing_);
+    }
+    //ui->video_slider->setEnabled(!is_playing_);
 
     if(cap_.isOpened() && is_playing_)
     {
@@ -227,11 +271,9 @@ void MainWindow::on_detection_switch_checkbox_clicked(bool checked)     // 检�
             on_detection_switch_checkbox_clicked(false);
         }
 
-        const char* c_str_model_path = model_path.toStdString().c_str();
-        if(face_detector_.load_model(c_str_model_path))
-            is_detection_model_loaded_ = true;
-        else
-            is_detection_model_loaded_ = false;
+        LOG(INFO) << "Load detection model from " << model_path.toStdString();
+        face_detector_ = std::make_shared<ev::Face_Detector>(model_path.toStdString());
+        is_detection_model_loaded_ = true;
     }
     else
     {

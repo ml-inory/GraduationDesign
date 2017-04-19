@@ -62,10 +62,6 @@ bool ev::Cap_Controller::open(const char* video_path)
     camera_id_ = -1;
     is_opened_camera_ = false;
     bool ret = cap_.open(video_path);
-    if(ret)
-    {
-        total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);     
-    }
     return ret;
 }
 
@@ -82,7 +78,7 @@ bool ev::Cap_Controller::read(cv::Mat& img, bool flip_channel)
 {
     bool ret = cap_.read(origin_frame_);
     if(flip_channel)    cv::cvtColor(origin_frame_, origin_frame_, COLOR_BGR2RGB);
-    pos_frame_ = cap_.get(cv::CAP_PROP_POS_FRAMES);
+    pos_frame_ = !is_opened_camera_ ? cap_.get(cv::CAP_PROP_POS_FRAMES) : 0;
     //LOG(INFO) << "Read frame " << pos_frame_;
     if(!force_not_resize_ && !force_resize_)
         check_if_need_resize();

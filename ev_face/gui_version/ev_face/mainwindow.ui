@@ -98,7 +98,7 @@
         <item row="3" column="0">
          <widget class="QLineEdit" name="detection_model_lineedit">
           <property name="text">
-           <string>../../data/model/seeta_fd_frontal_v1.0.bin</string>
+           <string>/home/inory/GraduationDesign/ev_face/data/model/seeta_fd_frontal_v1.0.bin</string>
           </property>
           <property name="readOnly">
            <bool>false</bool>
@@ -150,7 +150,7 @@
              <x>0</x>
              <y>0</y>
              <width>242</width>
-             <height>284</height>
+             <height>254</height>
             </rect>
            </property>
           </widget>
@@ -215,7 +215,7 @@
              <x>0</x>
              <y>0</y>
              <width>242</width>
-             <height>284</height>
+             <height>254</height>
             </rect>
            </property>
           </widget>
@@ -239,7 +239,7 @@
      <x>0</x>
      <y>0</y>
      <width>823</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
