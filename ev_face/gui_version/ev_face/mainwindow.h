@@ -45,6 +45,14 @@ private slots:
 
     void on_detection_switch_checkbox_clicked(bool checked);
 
+    void on_detection_browse_btn_clicked();
+
+    void on_detection_show_checkbox_clicked(bool checked);
+
+    void on_align_switch_checkbox_clicked(bool checked);
+
+    void on_align_show_checkbox_clicked(bool checked);
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
@@ -56,14 +64,17 @@ private:
     Ui::MainWindow *ui;
 
     ev::Cap_Controller cap_;
+
     std::shared_ptr<ev::Face_Detector> face_detector_;
+    std::shared_ptr<ev::Face_Aligner> face_aligner_;
 
     int fps_;
 
-    bool is_playing_ = false;
-    bool is_detection_model_loaded_ = false;
-
-    const std::string detection_model_path_ = "../../data/model/seeta_fd_frontal_v1.0.bin";
+    bool is_playing_;
+    bool is_detection_model_loaded_;
+    bool is_draw_detection_result_;
+    bool is_aligner_model_loaded_;
+    bool is_draw_align_result_;
 
     QTimer timer_;
 };

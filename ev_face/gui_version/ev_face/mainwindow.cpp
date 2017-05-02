@@ -3,7 +3,12 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    is_playing_(false),
+    is_detection_model_loaded_(false),
+    is_draw_detection_result_(true),
+    is_aligner_model_loaded_(false),
+    is_draw_align_result_(true)
 {
     ui->setupUi(this);
 
@@ -63,14 +68,34 @@ bool MainWindow::get_frame()    // 读取一帧并显示
            int face_num = static_cast<int>(faces.size());
            // draw
            cv::Rect face_rect;
-           for(int i = 0; i < face_num; i++)
+           for(int i = 0; i < face_num; ++i)
            {
                face_rect.x = faces[i].bbox.x;
                face_rect.y = faces[i].bbox.y;
                face_rect.width = faces[i].bbox.width;
                face_rect.height = faces[i].bbox.height;
                LOG(INFO) << "score: " << faces[i].score;
-               cv::rectangle(origin_frame, face_rect, cv::Scalar(255,0,0), 2, 1, 0);
+               if(is_draw_detection_result_)
+                   cv::rectangle(origin_frame, face_rect, cv::Scalar(0,0,255), 2, 1, 0);
+           }
+
+           // alignment
+           if(is_aligner_model_loaded_ && face_num > 0)
+           {
+               std::vector<FacialLandmark> face_feature_points;
+               face_aligner_->detect_multi_landmarks(img_data, faces, face_feature_points);
+               LOG(INFO) << "Detected " << face_feature_points.size() << " points";
+               // draw
+               for(int i = 0; i < face_feature_points.size(); ++i)
+               {
+                   if(is_draw_align_result_)
+                   {
+                       cv::Point center;
+                       center.x = face_feature_points[i].x;
+                       center.y = face_feature_points[i].y;
+                       cv::circle(origin_frame, center, 3, cv::Scalar(0,255,0), -1);
+                   }
+               }
            }
         }
 
@@ -264,15 +289,27 @@ void MainWindow::on_detection_switch_checkbox_clicked(bool checked)     // 检�
     {
         // register Face_Detector
         QString model_path = ui->detection_model_lineedit->text();
+        if(!QFile::exists(model_path))
+        {
+            QMessageBox::warning(this, "Error", QString("Detection model file ") + model_path + QString(" not exist!"), QMessageBox::Yes);
+            ui->detection_switch_checkbox->setChecked(false);
+            on_detection_switch_checkbox_clicked(false);
+            return;
+        }
         if(!model_path.endsWith(".bin"))
         {
             QMessageBox::warning(this, "Error", QString("Model path NOT right!"), QMessageBox::Yes);
             ui->detection_switch_checkbox->setChecked(false);
             on_detection_switch_checkbox_clicked(false);
+            return;
         }
 
         LOG(INFO) << "Load detection model from " << model_path.toStdString();
         face_detector_ = std::make_shared<ev::Face_Detector>(model_path.toStdString());
+        // some settings
+        face_detector_->set_score_thresh(10.0f);
+        face_detector_->set_min_face_size(100);
+        // set flag
         is_detection_model_loaded_ = true;
     }
     else
@@ -285,4 +322,62 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QSize new_size = event->size();
 
+}
+
+void MainWindow::on_detection_browse_btn_clicked()
+{
+    // pop up dialog
+    QFileDialog* file_dialog = new QFileDialog(this);
+    file_dialog->setWindowTitle(tr("Browse detection model"));
+    file_dialog->setDirectory(".");
+    if(file_dialog->exec() == QDialog::Accepted)
+    {
+        QString file_path = file_dialog->selectedFiles()[0];
+        ui->detection_model_lineedit->setText(file_path);
+    }
+}
+
+void MainWindow::on_detection_show_checkbox_clicked(bool checked)
+{
+    is_draw_detection_result_ = checked;
+}
+
+void MainWindow::on_align_switch_checkbox_clicked(bool checked)     // 对齐开始
+{
+    ui->align_show_checkbox->setEnabled(checked);
+
+    if(checked)
+    {
+        // register Face_Aligner
+        QString model_path = ui->align_model_lineedit->text();
+        if(!QFile::exists(model_path))
+        {
+            QMessageBox::warning(this, "Error", QString("Alignment model file ") + model_path + QString(" not exist!"), QMessageBox::Yes);
+            ui->align_switch_checkbox->setChecked(false);
+            on_align_switch_checkbox_clicked(false);
+            return;
+        }
+        if(!model_path.endsWith(".bin"))
+        {
+            QMessageBox::warning(this, "Error", QString("Model path NOT right!"), QMessageBox::Yes);
+            ui->align_switch_checkbox->setChecked(false);
+            on_align_switch_checkbox_clicked(false);
+            return;
+        }
+
+        LOG(INFO) << "Load detection model from " << model_path.toStdString();
+        face_aligner_ = std::make_shared<ev::Face_Aligner>(model_path.toStdString());
+
+        // set flag
+        is_aligner_model_loaded_ = true;
+    }
+    else
+    {
+        is_aligner_model_loaded_ = false;
+    }
+}
+
+void MainWindow::on_align_show_checkbox_clicked(bool checked)
+{
+    is_draw_align_result_ = checked;
 }
