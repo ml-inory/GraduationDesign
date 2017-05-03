@@ -26,21 +26,26 @@ SEETA_ROOT = /Users/rzyang/SeetaFaceEngine
 
 FACE_DETECTION_ROOT = $${SEETA_ROOT}/FaceDetection
 FACE_ALIGNMENT_ROOT = $${SEETA_ROOT}/FaceAlignment
+FACE_ID_ROOT = $${SEETA_ROOT}/FaceIdentification
 
 FACE_DETECTION_INCLUDE = $${FACE_DETECTION_ROOT}/include
 FACE_ALIGNMENT_INCLUDE = $${FACE_ALIGNMENT_ROOT}/include
+FACE_ID_INCLUDE = $${FACE_ID_ROOT}/include
 
 FACE_DETECTION_LIB = $${FACE_DETECTION_ROOT}/build
 FACE_ALIGNMENT_LIB = $${FACE_ALIGNMENT_ROOT}/build
+FACE_ID_LIB = $${FACE_ID_ROOT}/build
 
 INCLUDEPATH += ../../include/ \
                /usr/local/include/ \
                $${FACE_DETECTION_INCLUDE}    \
-               $${FACE_ALIGNMENT_INCLUDE}
+               $${FACE_ALIGNMENT_INCLUDE}   \
+               $${FACE_ID_INCLUDE}
 
-LIBS += -L/usr/local/lib/ -lopencv_core -lopencv_highgui -lopencv_videoio -lopencv_imgproc \
+LIBS += -L/usr/local/lib/ -lopencv_core -lopencv_videoio -lopencv_imgproc \
         -L/usr/local/lib/ -lglog \
         -L$${FACE_DETECTION_LIB} -lseeta_facedet_lib \
-        -L$${FACE_ALIGNMENT_LIB} -lseeta_fa_lib
+        -L$${FACE_ALIGNMENT_LIB} -lseeta_fa_lib \
+        -L$${FACE_ID_LIB} -lviplnet
 
 FORMS    += mainwindow.ui

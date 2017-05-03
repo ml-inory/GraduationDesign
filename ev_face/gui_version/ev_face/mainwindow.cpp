@@ -8,7 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     is_detection_model_loaded_(false),
     is_draw_detection_result_(true),
     is_aligner_model_loaded_(false),
-    is_draw_align_result_(true)
+    is_draw_align_result_(true),
+    is_identifier_model_loaded_(false)
 {
     ui->setupUi(this);
 
@@ -53,7 +54,7 @@ bool MainWindow::get_frame()    // 读取一帧并显示
         cv::Mat origin_frame;
         cv::Mat gray_frame;
         bool ret = cap_.read(tmp, true);      // true means BGR2RGB
-        if(ret) origin_frame = cap_.origin_frame_;
+        if(ret) origin_frame = cap_.origin_frame_.clone();
         else    return false;
 
         // construct image data
@@ -74,7 +75,7 @@ bool MainWindow::get_frame()    // 读取一帧并显示
                face_rect.y = faces[i].bbox.y;
                face_rect.width = faces[i].bbox.width;
                face_rect.height = faces[i].bbox.height;
-               LOG(INFO) << "score: " << faces[i].score;
+               //LOG(INFO) << "score: " << faces[i].score;
                if(is_draw_detection_result_)
                    cv::rectangle(origin_frame, face_rect, cv::Scalar(0,0,255), 2, 1, 0);
            }
@@ -84,10 +85,13 @@ bool MainWindow::get_frame()    // 读取一帧并显示
            {
                std::vector<FacialLandmark> face_feature_points;
                face_aligner_->detect_multi_landmarks(img_data, faces, face_feature_points);
-               LOG(INFO) << "Detected " << face_feature_points.size() << " points";
-               // draw
+               //LOG(INFO) << "Detected " << face_feature_points.size() << " points";
+
                for(int i = 0; i < face_feature_points.size(); ++i)
                {
+                   // assign to pt5_
+                   if(i < 5)    { pt5_[i].x = face_feature_points[i].x; pt5_[i].y = face_feature_points[i].y; }
+                   // draw
                    if(is_draw_align_result_)
                    {
                        cv::Point center;
@@ -96,6 +100,17 @@ bool MainWindow::get_frame()    // 读取一帧并显示
                        cv::circle(origin_frame, center, 3, cv::Scalar(0,255,0), -1);
                    }
                }
+
+               // identification
+               if(face_feature_points.size() > 0 && is_identifier_model_loaded_)
+               {
+                   ui->snapshot_btn->setEnabled(true);
+               }
+
+           }
+           else
+           {
+               ui->snapshot_btn->setEnabled(false);
            }
         }
 
@@ -108,6 +123,13 @@ bool MainWindow::get_frame()    // 读取一帧并显示
         return false;
 }
 
+QPixmap MainWindow::mat_to_pixmap(Mat &src_img, int dst_width)
+{
+    QImage image = QImage((const unsigned char*)src_img.data, src_img.cols, src_img.rows, QImage::Format_RGB888);
+    if(dst_width > 0)
+        image = image.scaledToWidth(dst_width);
+    return QPixmap::fromImage(image);
+}
 
 /* Slots */
 void MainWindow::on_action_open_video_triggered()   // 打开视频
@@ -284,6 +306,9 @@ void MainWindow::on_video_play_pause_clicked()      // 点播放键
 void MainWindow::on_detection_switch_checkbox_clicked(bool checked)     // 检测开启
 {
     ui->detection_show_checkbox->setEnabled(checked);
+    ui->Align->setEnabled(checked);
+    ui->align_switch_checkbox->setEnabled(checked);
+    ui->align_browse_btn->setEnabled(checked);
 
     if(checked)     // start to detect
     {
@@ -345,6 +370,7 @@ void MainWindow::on_detection_show_checkbox_clicked(bool checked)
 void MainWindow::on_align_switch_checkbox_clicked(bool checked)     // 对齐开始
 {
     ui->align_show_checkbox->setEnabled(checked);
+    ui->Identify->setEnabled(checked);
 
     if(checked)
     {
@@ -365,11 +391,15 @@ void MainWindow::on_align_switch_checkbox_clicked(bool checked)     // 对齐开
             return;
         }
 
-        LOG(INFO) << "Load detection model from " << model_path.toStdString();
+        LOG(INFO) << "Load alignment model from " << model_path.toStdString();
         face_aligner_ = std::make_shared<ev::Face_Aligner>(model_path.toStdString());
 
         // set flag
         is_aligner_model_loaded_ = true;
+
+        // disable toolkit_tabwidget
+        if(!is_identifier_model_loaded_)
+            ui->toolkit_tagwidget->setEnabled(false);
     }
     else
     {
@@ -380,4 +410,100 @@ void MainWindow::on_align_switch_checkbox_clicked(bool checked)     // 对齐开
 void MainWindow::on_align_show_checkbox_clicked(bool checked)
 {
     is_draw_align_result_ = checked;
+}
+
+void MainWindow::on_id_switch_checkbox_clicked(bool checked)    // 识别模块工作
+{
+    if(checked)
+    {
+        // register Face_Identifier
+        QString model_path = ui->id_model_lineedit->text();
+        if(!QFile::exists(model_path))
+        {
+            QMessageBox::warning(this, "Error", QString("Identification model file ") + model_path + QString(" not exist!"), QMessageBox::Yes);
+            ui->id_switch_checkbox->setChecked(false);
+            on_id_switch_checkbox_clicked(false);
+            return;
+        }
+        if(!model_path.endsWith(".bin"))
+        {
+            QMessageBox::warning(this, "Error", QString("Model path NOT right!"), QMessageBox::Yes);
+            ui->id_switch_checkbox->setChecked(false);
+            on_id_switch_checkbox_clicked(false);
+            return;
+        }
+
+        LOG(INFO) << "Load identification model from " << model_path.toStdString();
+        face_identifier_ = std::make_shared<ev::Face_Identifier>(model_path.toStdString());
+
+        // set flag
+        is_identifier_model_loaded_ = true;
+    }
+    else
+    {
+        is_identifier_model_loaded_ = false;
+    }
+
+    ui->toolkit_tagwidget->setEnabled(is_identifier_model_loaded_);
+}
+
+void MainWindow::on_id_browse_btn_clicked()
+{
+    // pop up dialog
+    QFileDialog* file_dialog = new QFileDialog(this);
+    file_dialog->setWindowTitle(tr("Browse detection model"));
+    file_dialog->setDirectory(".");
+    if(file_dialog->exec() == QDialog::Accepted)
+    {
+        QString file_path = file_dialog->selectedFiles()[0];
+        ui->id_model_lineedit->setText(file_path);
+    }
+}
+
+void MainWindow::on_gen_btn_clicked()
+{
+    // check if dir features/ exist, if not create it.
+    QDir target_root_dir("/Users/rzyang/GraduationDesign/ev_face/gui_version/build/features");
+    if(!target_root_dir.exists())    target_root_dir.mkdir(target_root_dir.absolutePath());
+    if(ui->target_name_lineedit->text() != QString(""))
+    {
+        // TODO
+        QFile target_feature(target_root_dir.absolutePath() + QString("/") + ui->target_name_lineedit->text() + QString(".bin"));
+        if(target_feature.exists())     target_feature.remove();
+    }
+}
+
+void MainWindow::on_snapshot_btn_clicked()      // 截图
+{
+    // check if dir images/ exist, if not create it.
+    QDir target_root_dir("/Users/rzyang/GraduationDesign/ev_face/gui_version/build/images/");
+    if(!target_root_dir.exists())      target_root_dir.mkdir(target_root_dir.absolutePath());
+
+    // crop face
+    cv::Mat dst_img(face_identifier_->crop_height(), face_identifier_->crop_width(), CV_8UC(face_identifier_->crop_channels()));
+
+    ImageData dst_img_data(dst_img.cols, dst_img.rows, dst_img.channels());
+    dst_img_data.data = dst_img.data;
+
+    cv::Mat src_img = cap_.origin_frame_;
+    ImageData src_img_data(src_img.cols, src_img.rows, src_img.channels());
+    src_img_data.data = src_img.data;
+
+    face_identifier_->crop_face(src_img_data, pt5_, dst_img_data);
+    QPixmap dst_pixmap = mat_to_pixmap(dst_img);
+
+    // show snapshot
+    ui->snapshot_label->setPixmap(dst_pixmap);
+
+    // save
+    if(ui->target_name_lineedit->text() != QString(""))
+    {
+        // TODO
+        QDir target_dir(target_root_dir.absolutePath() + QString("/") + ui->target_name_lineedit->text());
+        if(!target_dir.exists())      target_dir.mkdir(target_dir.absolutePath());
+        int file_num = target_dir.count() - 2;
+        QString img_name = QString("%1.jpg").arg(file_num + 1);
+        QString img_path = target_dir.absolutePath() + QString("/") + img_name;
+        dst_pixmap.save(img_path);
+    }
 }

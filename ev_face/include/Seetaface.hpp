@@ -18,6 +18,7 @@
 #include "common.h"
 #include "face_detection.h"
 #include "face_alignment.h"
+#include "face_identification.h"
 
 using namespace std;
 using namespace seeta;
@@ -134,6 +135,37 @@ namespace ev
         private:
             string model_path_;
             std::shared_ptr<seeta::FaceAlignment> aligner_;
+    };
+
+    typedef float* FaceFeatures;
+
+    class Face_Identifier
+    {
+        public:
+            Face_Identifier(const string model_path=""):
+                model_path_(model_path),
+                identifier_(std::make_shared<seeta::FaceIdentification>(model_path.c_str()))
+            {
+            }
+
+            uint8_t crop_face(const ImageData& src_img, const FacialLandmark* llpoint, const ImageData& dst_img)
+            {
+                return identifier_->CropFace(src_img, llpoint, dst_img);
+            }
+
+            uint8_t extract_features(const ImageData& crop_img, FaceFeatures const feats)
+            {
+                return identifier_->ExtractFeature(crop_img, feats);
+            }
+
+            uint32_t crop_width()   { return identifier_->crop_width(); }
+            uint32_t crop_height()  { return identifier_->crop_height(); }
+            uint32_t crop_channels(){ return identifier_->crop_channels(); }
+            uint32_t feature_size() { return identifier_->feature_size(); }
+
+        private:
+            string model_path_;
+            std::shared_ptr<seeta::FaceIdentification> identifier_;
     };
 }
 

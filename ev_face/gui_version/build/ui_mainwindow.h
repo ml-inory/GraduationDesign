@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -68,6 +69,23 @@ public:
     QWidget *scrollAreaWidgetContents_2;
     QWidget *Identify;
     QGridLayout *gridLayout_6;
+    QLineEdit *id_model_lineedit;
+    QLabel *label_3;
+    QCheckBox *id_switch_checkbox;
+    QPushButton *id_browse_btn;
+    QTabWidget *toolkit_tagwidget;
+    QWidget *Crop;
+    QGridLayout *gridLayout;
+    QLineEdit *target_name_lineedit;
+    QPushButton *snapshot_btn;
+    QPushButton *gen_btn;
+    QLabel *label_4;
+    QLabel *snapshot_label;
+    QWidget *Verify;
+    QGridLayout *gridLayout_3;
+    QLabel *label_5;
+    QComboBox *verify_target_combo;
+    QPushButton *verify_btn;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QStatusBar *statusBar;
@@ -178,7 +196,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 213, 270));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 215, 270));
         scrollArea->setWidget(scrollAreaWidgetContents);
 
         gridLayout_2->addWidget(scrollArea, 5, 0, 1, 1);
@@ -186,13 +204,14 @@ public:
         tabWidget->addTab(Detection, QString());
         Align = new QWidget();
         Align->setObjectName(QStringLiteral("Align"));
+        Align->setEnabled(false);
         gridLayout_4 = new QGridLayout(Align);
         gridLayout_4->setSpacing(6);
         gridLayout_4->setContentsMargins(11, 11, 11, 11);
         gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
         align_browse_btn = new QPushButton(Align);
         align_browse_btn->setObjectName(QStringLiteral("align_browse_btn"));
-        align_browse_btn->setEnabled(true);
+        align_browse_btn->setEnabled(false);
 
         gridLayout_4->addWidget(align_browse_btn, 4, 1, 1, 1);
 
@@ -209,6 +228,7 @@ public:
 
         align_switch_checkbox = new QCheckBox(Align);
         align_switch_checkbox->setObjectName(QStringLiteral("align_switch_checkbox"));
+        align_switch_checkbox->setEnabled(false);
 
         gridLayout_4->addWidget(align_switch_checkbox, 0, 1, 1, 1);
 
@@ -224,7 +244,7 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 213, 264));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 215, 264));
         scrollArea_2->setWidget(scrollAreaWidgetContents_2);
 
         gridLayout_4->addWidget(scrollArea_2, 5, 1, 1, 1);
@@ -232,10 +252,93 @@ public:
         tabWidget->addTab(Align, QString());
         Identify = new QWidget();
         Identify->setObjectName(QStringLiteral("Identify"));
+        Identify->setEnabled(false);
         gridLayout_6 = new QGridLayout(Identify);
         gridLayout_6->setSpacing(6);
         gridLayout_6->setContentsMargins(11, 11, 11, 11);
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
+        id_model_lineedit = new QLineEdit(Identify);
+        id_model_lineedit->setObjectName(QStringLiteral("id_model_lineedit"));
+
+        gridLayout_6->addWidget(id_model_lineedit, 2, 0, 1, 1);
+
+        label_3 = new QLabel(Identify);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setTextFormat(Qt::AutoText);
+
+        gridLayout_6->addWidget(label_3, 1, 0, 1, 1);
+
+        id_switch_checkbox = new QCheckBox(Identify);
+        id_switch_checkbox->setObjectName(QStringLiteral("id_switch_checkbox"));
+
+        gridLayout_6->addWidget(id_switch_checkbox, 0, 0, 1, 1);
+
+        id_browse_btn = new QPushButton(Identify);
+        id_browse_btn->setObjectName(QStringLiteral("id_browse_btn"));
+
+        gridLayout_6->addWidget(id_browse_btn, 3, 0, 1, 1);
+
+        toolkit_tagwidget = new QTabWidget(Identify);
+        toolkit_tagwidget->setObjectName(QStringLiteral("toolkit_tagwidget"));
+        Crop = new QWidget();
+        Crop->setObjectName(QStringLiteral("Crop"));
+        gridLayout = new QGridLayout(Crop);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        target_name_lineedit = new QLineEdit(Crop);
+        target_name_lineedit->setObjectName(QStringLiteral("target_name_lineedit"));
+
+        gridLayout->addWidget(target_name_lineedit, 0, 1, 1, 1);
+
+        snapshot_btn = new QPushButton(Crop);
+        snapshot_btn->setObjectName(QStringLiteral("snapshot_btn"));
+
+        gridLayout->addWidget(snapshot_btn, 1, 0, 1, 2);
+
+        gen_btn = new QPushButton(Crop);
+        gen_btn->setObjectName(QStringLiteral("gen_btn"));
+
+        gridLayout->addWidget(gen_btn, 3, 0, 1, 2);
+
+        label_4 = new QLabel(Crop);
+        label_4->setObjectName(QStringLiteral("label_4"));
+
+        gridLayout->addWidget(label_4, 0, 0, 1, 1);
+
+        snapshot_label = new QLabel(Crop);
+        snapshot_label->setObjectName(QStringLiteral("snapshot_label"));
+        snapshot_label->setScaledContents(true);
+
+        gridLayout->addWidget(snapshot_label, 2, 0, 1, 2);
+
+        toolkit_tagwidget->addTab(Crop, QString());
+        Verify = new QWidget();
+        Verify->setObjectName(QStringLiteral("Verify"));
+        gridLayout_3 = new QGridLayout(Verify);
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setContentsMargins(11, 11, 11, 11);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        label_5 = new QLabel(Verify);
+        label_5->setObjectName(QStringLiteral("label_5"));
+
+        gridLayout_3->addWidget(label_5, 0, 0, 1, 1);
+
+        verify_target_combo = new QComboBox(Verify);
+        verify_target_combo->setObjectName(QStringLiteral("verify_target_combo"));
+
+        gridLayout_3->addWidget(verify_target_combo, 0, 1, 1, 1);
+
+        verify_btn = new QPushButton(Verify);
+        verify_btn->setObjectName(QStringLiteral("verify_btn"));
+        verify_btn->setCheckable(true);
+
+        gridLayout_3->addWidget(verify_btn, 1, 0, 1, 2);
+
+        toolkit_tagwidget->addTab(Verify, QString());
+
+        gridLayout_6->addWidget(toolkit_tagwidget, 4, 0, 1, 1);
+
         tabWidget->addTab(Identify, QString());
 
         horizontalLayout_2->addWidget(tabWidget);
@@ -260,7 +363,8 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
+        toolkit_tagwidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -291,6 +395,18 @@ public:
         align_switch_checkbox->setText(QApplication::translate("MainWindow", "\345\274\200\345\220\257", 0));
         align_show_checkbox->setText(QApplication::translate("MainWindow", "\346\230\276\347\244\272\347\202\271\347\272\277\346\241\206", 0));
         tabWidget->setTabText(tabWidget->indexOf(Align), QApplication::translate("MainWindow", "Align", 0));
+        id_model_lineedit->setText(QApplication::translate("MainWindow", "/Users/rzyang/SeetaFaceEngine/FaceIdentification/model/seeta_fr_v1.0.bin", 0));
+        label_3->setText(QApplication::translate("MainWindow", "\346\250\241\345\236\213\350\267\257\345\276\204:", 0));
+        id_switch_checkbox->setText(QApplication::translate("MainWindow", "\345\274\200\345\220\257", 0));
+        id_browse_btn->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210", 0));
+        snapshot_btn->setText(QApplication::translate("MainWindow", "\346\210\252\345\217\226", 0));
+        gen_btn->setText(QApplication::translate("MainWindow", "\347\224\237\346\210\220", 0));
+        label_4->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));
+        snapshot_label->setText(QString());
+        toolkit_tagwidget->setTabText(toolkit_tagwidget->indexOf(Crop), QApplication::translate("MainWindow", "Crop", 0));
+        label_5->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));
+        verify_btn->setText(QApplication::translate("MainWindow", "\345\257\271\346\257\224", 0));
+        toolkit_tagwidget->setTabText(toolkit_tagwidget->indexOf(Verify), QApplication::translate("MainWindow", "Verify", 0));
         tabWidget->setTabText(tabWidget->indexOf(Identify), QApplication::translate("MainWindow", "Identify", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi

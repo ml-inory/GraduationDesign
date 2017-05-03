@@ -88,7 +88,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="Detection">
        <attribute name="title">
@@ -152,7 +152,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>213</width>
+             <width>215</width>
              <height>270</height>
             </rect>
            </property>
@@ -162,6 +162,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="Align">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <attribute name="title">
         <string>Align</string>
        </attribute>
@@ -169,7 +172,7 @@
         <item row="4" column="1">
          <widget class="QPushButton" name="align_browse_btn">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="text">
            <string>浏览</string>
@@ -195,6 +198,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QCheckBox" name="align_switch_checkbox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>开启</string>
           </property>
@@ -223,7 +229,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>213</width>
+             <width>215</width>
              <height>264</height>
             </rect>
            </property>
@@ -233,10 +239,120 @@
        </layout>
       </widget>
       <widget class="QWidget" name="Identify">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <attribute name="title">
         <string>Identify</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6"/>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="2" column="0">
+         <widget class="QLineEdit" name="id_model_lineedit">
+          <property name="text">
+           <string>/Users/rzyang/SeetaFaceEngine/FaceIdentification/model/seeta_fr_v1.0.bin</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>模型路径:</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="id_switch_checkbox">
+          <property name="text">
+           <string>开启</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="id_browse_btn">
+          <property name="text">
+           <string>浏览</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QTabWidget" name="toolkit_tagwidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="Crop">
+           <attribute name="title">
+            <string>Crop</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="target_name_lineedit"/>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QPushButton" name="snapshot_btn">
+              <property name="text">
+               <string>截取</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QPushButton" name="gen_btn">
+              <property name="text">
+               <string>生成</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>目标名称：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QLabel" name="snapshot_label">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="Verify">
+           <attribute name="title">
+            <string>Verify</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>目标名称：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="verify_target_combo"/>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QPushButton" name="verify_btn">
+              <property name="text">
+               <string>对比</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

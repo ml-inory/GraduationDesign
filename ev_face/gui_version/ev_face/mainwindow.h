@@ -53,6 +53,14 @@ private slots:
 
     void on_align_show_checkbox_clicked(bool checked);
 
+    void on_id_switch_checkbox_clicked(bool checked);
+
+    void on_id_browse_btn_clicked();
+
+    void on_gen_btn_clicked();
+
+    void on_snapshot_btn_clicked();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
@@ -60,6 +68,7 @@ private:
     void init_glog();
     void init_cap();
     bool get_frame();
+    QPixmap mat_to_pixmap(cv::Mat& src_img, int dst_width = 0);
 
     Ui::MainWindow *ui;
 
@@ -67,6 +76,9 @@ private:
 
     std::shared_ptr<ev::Face_Detector> face_detector_;
     std::shared_ptr<ev::Face_Aligner> face_aligner_;
+    std::shared_ptr<ev::Face_Identifier> face_identifier_;
+
+    FacialLandmark pt5_[5];
 
     int fps_;
 
@@ -75,6 +87,7 @@ private:
     bool is_draw_detection_result_;
     bool is_aligner_model_loaded_;
     bool is_draw_align_result_;
+    bool is_identifier_model_loaded_;
 
     QTimer timer_;
 };

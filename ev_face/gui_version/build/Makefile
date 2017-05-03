@@ -13,9 +13,9 @@ MAKEFILE      = Makefile
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -stdlib=libc++ -std=c++11 -Wall -Wextra -pedantic -g -std=gnu++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I../ev_face -I. -I../../include -I/usr/local/include -I../../../../SeetaFaceEngine/FaceDetection/include -I../../../../SeetaFaceEngine/FaceAlignment/include -I../../../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers -I../../../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers -I../../../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib
+CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -stdlib=libc++ -std=c++11 -Wall -Wextra -pedantic -g -std=gnu++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
+INCPATH       = -I../ev_face -I. -I../../include -I/usr/local/include -I../../../../SeetaFaceEngine/FaceDetection/include -I../../../../SeetaFaceEngine/FaceAlignment/include -I../../../../SeetaFaceEngine/FaceIdentification/include -I../../../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers -I../../../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers -I../../../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib
 QMAKE         = /Users/rzyang/Qt5.6.2/5.6/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -35,8 +35,8 @@ COMPRESS      = gzip -9f
 DISTNAME      = ev_face1.0.0
 DISTDIR = /Users/rzyang/GraduationDesign/ev_face/gui_version/build/.tmp/ev_face1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-LFLAGS        = -headerpad_max_install_names -stdlib=libc++ -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.7 -Wl,-rpath,/Users/rzyang/Qt5.6.2/5.6/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib -L/usr/local/lib/ -lopencv_core -lopencv_highgui -lopencv_videoio -lopencv_imgproc -lglog -L/Users/rzyang/SeetaFaceEngine/FaceDetection/build -lseeta_facedet_lib -L/Users/rzyang/SeetaFaceEngine/FaceAlignment/build -lseeta_fa_lib -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL 
+LFLAGS        = -headerpad_max_install_names -stdlib=libc++ -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.12 -Wl,-rpath,/Users/rzyang/Qt5.6.2/5.6/clang_64/lib
+LIBS          = $(SUBLIBS) -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib -L/usr/local/lib/ -lopencv_core -lopencv_videoio -lopencv_imgproc -lglog -L/Users/rzyang/SeetaFaceEngine/FaceDetection/build -lseeta_facedet_lib -L/Users/rzyang/SeetaFaceEngine/FaceAlignment/build -lseeta_fa_lib -L/Users/rzyang/SeetaFaceEngine/FaceIdentification/build -lviplnet -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -628,8 +628,9 @@ moc_mainwindow.cpp: ../../../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Hea
 		../../../../SeetaFaceEngine/FaceDetection/include/common.h \
 		../../../../SeetaFaceEngine/FaceDetection/include/face_detection.h \
 		../../../../SeetaFaceEngine/FaceAlignment/include/face_alignment.h \
+		../../../../SeetaFaceEngine/FaceIdentification/include/face_identification.h \
 		../ev_face/mainwindow.h
-	/Users/rzyang/Qt5.6.2/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/rzyang/Qt5.6.2/5.6/clang_64/mkspecs/macx-clang -I/Users/rzyang/GraduationDesign/ev_face/gui_version/ev_face -I/Users/rzyang/GraduationDesign/ev_face/include -I/usr/local/include -I/Users/rzyang/SeetaFaceEngine/FaceDetection/include -I/Users/rzyang/SeetaFaceEngine/FaceAlignment/include -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib ../ev_face/mainwindow.h -o moc_mainwindow.cpp
+	/Users/rzyang/Qt5.6.2/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/rzyang/Qt5.6.2/5.6/clang_64/mkspecs/macx-clang -I/Users/rzyang/GraduationDesign/ev_face/gui_version/ev_face -I/Users/rzyang/GraduationDesign/ev_face/include -I/usr/local/include -I/Users/rzyang/SeetaFaceEngine/FaceDetection/include -I/Users/rzyang/SeetaFaceEngine/FaceAlignment/include -I/Users/rzyang/SeetaFaceEngine/FaceIdentification/include -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/rzyang/Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/rzyang/Qt5.6.2/5.6/clang_64/lib ../ev_face/mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -712,6 +713,7 @@ main.o: ../ev_face/main.cpp ../ev_face/mainwindow.h \
 		../../../../SeetaFaceEngine/FaceDetection/include/common.h \
 		../../../../SeetaFaceEngine/FaceDetection/include/face_detection.h \
 		../../../../SeetaFaceEngine/FaceAlignment/include/face_alignment.h \
+		../../../../SeetaFaceEngine/FaceIdentification/include/face_identification.h \
 		../../../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ev_face/main.cpp
@@ -777,7 +779,187 @@ mainwindow.o: ../ev_face/mainwindow.cpp ../ev_face/mainwindow.h \
 		../../../../SeetaFaceEngine/FaceDetection/include/common.h \
 		../../../../SeetaFaceEngine/FaceDetection/include/face_detection.h \
 		../../../../SeetaFaceEngine/FaceAlignment/include/face_alignment.h \
-		ui_mainwindow.h
+		../../../../SeetaFaceEngine/FaceIdentification/include/face_identification.h \
+		ui_mainwindow.h \
+		/usr/local/include/opencv2/opencv.hpp \
+		/usr/local/include/opencv2/calib3d.hpp \
+		/usr/local/include/opencv2/features2d.hpp \
+		/usr/local/include/opencv2/flann/miniflann.hpp \
+		/usr/local/include/opencv2/flann/defines.h \
+		/usr/local/include/opencv2/flann/config.h \
+		/usr/local/include/opencv2/core/affine.hpp \
+		/usr/local/include/opencv2/calib3d/calib3d_c.h \
+		/usr/local/include/opencv2/flann.hpp \
+		/usr/local/include/opencv2/flann/flann_base.hpp \
+		/usr/local/include/opencv2/flann/general.h \
+		/usr/local/include/opencv2/flann/matrix.h \
+		/usr/local/include/opencv2/flann/params.h \
+		/usr/local/include/opencv2/flann/any.h \
+		/usr/local/include/opencv2/flann/saving.h \
+		/usr/local/include/opencv2/flann/nn_index.h \
+		/usr/local/include/opencv2/flann/result_set.h \
+		/usr/local/include/opencv2/flann/all_indices.h \
+		/usr/local/include/opencv2/flann/kdtree_index.h \
+		/usr/local/include/opencv2/flann/dynamic_bitset.h \
+		/usr/local/include/boost/dynamic_bitset.hpp \
+		/usr/local/include/boost/dynamic_bitset/dynamic_bitset.hpp \
+		/usr/local/include/boost/dynamic_bitset/config.hpp \
+		/usr/local/include/boost/config.hpp \
+		/usr/local/include/boost/config/user.hpp \
+		/usr/local/include/boost/config/select_compiler_config.hpp \
+		/usr/local/include/boost/config/compiler/nvcc.hpp \
+		/usr/local/include/boost/config/compiler/gcc_xml.hpp \
+		/usr/local/include/boost/config/compiler/cray.hpp \
+		/usr/local/include/boost/config/compiler/common_edg.hpp \
+		/usr/local/include/boost/config/compiler/comeau.hpp \
+		/usr/local/include/boost/config/compiler/pathscale.hpp \
+		/usr/local/include/boost/config/compiler/intel.hpp \
+		/usr/local/include/boost/config/compiler/visualc.hpp \
+		/usr/local/include/boost/config/compiler/gcc.hpp \
+		/usr/local/include/boost/config/compiler/clang.hpp \
+		/usr/local/include/boost/config/compiler/digitalmars.hpp \
+		/usr/local/include/boost/config/compiler/kai.hpp \
+		/usr/local/include/boost/config/compiler/sgi_mipspro.hpp \
+		/usr/local/include/boost/config/compiler/compaq_cxx.hpp \
+		/usr/local/include/boost/config/compiler/greenhills.hpp \
+		/usr/local/include/boost/config/compiler/codegear.hpp \
+		/usr/local/include/boost/config/compiler/borland.hpp \
+		/usr/local/include/boost/config/compiler/metrowerks.hpp \
+		/usr/local/include/boost/config/compiler/sunpro_cc.hpp \
+		/usr/local/include/boost/config/compiler/hp_acc.hpp \
+		/usr/local/include/boost/config/compiler/mpw.hpp \
+		/usr/local/include/boost/config/compiler/vacpp.hpp \
+		/usr/local/include/boost/config/compiler/pgi.hpp \
+		/usr/local/include/boost/config/select_stdlib_config.hpp \
+		/usr/local/include/boost/config/stdlib/stlport.hpp \
+		/usr/local/include/boost/config/stdlib/libcomo.hpp \
+		/usr/local/include/boost/config/no_tr1/utility.hpp \
+		/usr/local/include/boost/config/stdlib/roguewave.hpp \
+		/usr/local/include/boost/config/stdlib/libcpp.hpp \
+		/usr/local/include/boost/config/stdlib/libstdcpp3.hpp \
+		/usr/local/include/boost/config/stdlib/sgi.hpp \
+		/usr/local/include/boost/config/stdlib/msl.hpp \
+		/usr/local/include/boost/config/posix_features.hpp \
+		/usr/local/include/boost/config/stdlib/vacpp.hpp \
+		/usr/local/include/boost/config/stdlib/modena.hpp \
+		/usr/local/include/boost/config/stdlib/dinkumware.hpp \
+		/usr/local/include/boost/config/select_platform_config.hpp \
+		/usr/local/include/boost/config/platform/linux.hpp \
+		/usr/local/include/boost/config/platform/bsd.hpp \
+		/usr/local/include/boost/config/platform/solaris.hpp \
+		/usr/local/include/boost/config/platform/irix.hpp \
+		/usr/local/include/boost/config/platform/hpux.hpp \
+		/usr/local/include/boost/config/platform/cygwin.hpp \
+		/usr/local/include/boost/config/platform/win32.hpp \
+		/usr/local/include/boost/config/platform/beos.hpp \
+		/usr/local/include/boost/config/platform/macos.hpp \
+		/usr/local/include/boost/config/platform/aix.hpp \
+		/usr/local/include/boost/config/platform/amigaos.hpp \
+		/usr/local/include/boost/config/platform/qnxnto.hpp \
+		/usr/local/include/boost/config/platform/vxworks.hpp \
+		/usr/local/include/boost/config/platform/symbian.hpp \
+		/usr/local/include/boost/config/platform/cray.hpp \
+		/usr/local/include/boost/config/platform/vms.hpp \
+		/usr/local/include/boost/config/suffix.hpp \
+		/usr/local/include/boost/detail/workaround.hpp \
+		/usr/local/include/boost/dynamic_bitset_fwd.hpp \
+		/usr/local/include/boost/detail/dynamic_bitset.hpp \
+		/usr/local/include/boost/detail/iterator.hpp \
+		/usr/local/include/boost/move/move.hpp \
+		/usr/local/include/boost/move/detail/config_begin.hpp \
+		/usr/local/include/boost/move/utility.hpp \
+		/usr/local/include/boost/move/detail/workaround.hpp \
+		/usr/local/include/boost/move/utility_core.hpp \
+		/usr/local/include/boost/move/core.hpp \
+		/usr/local/include/boost/move/detail/type_traits.hpp \
+		/usr/local/include/boost/move/detail/meta_utils.hpp \
+		/usr/local/include/boost/move/detail/meta_utils_core.hpp \
+		/usr/local/include/boost/move/detail/config_end.hpp \
+		/usr/local/include/boost/assert.hpp \
+		/usr/local/include/boost/current_function.hpp \
+		/usr/local/include/boost/static_assert.hpp \
+		/usr/local/include/boost/move/traits.hpp \
+		/usr/local/include/boost/move/iterator.hpp \
+		/usr/local/include/boost/move/detail/iterator_traits.hpp \
+		/usr/local/include/boost/move/detail/std_ns_begin.hpp \
+		/usr/local/include/boost/move/detail/std_ns_end.hpp \
+		/usr/local/include/boost/move/algorithm.hpp \
+		/usr/local/include/boost/move/algo/move.hpp \
+		/usr/local/include/boost/detail/no_exceptions_support.hpp \
+		/usr/local/include/boost/core/no_exceptions_support.hpp \
+		/usr/local/include/boost/limits.hpp \
+		/usr/local/include/boost/pending/lowest_bit.hpp \
+		/usr/local/include/boost/pending/integer_log2.hpp \
+		/usr/local/include/boost/integer/integer_log2.hpp \
+		/usr/local/include/boost/utility/addressof.hpp \
+		/usr/local/include/boost/core/addressof.hpp \
+		/usr/local/include/boost/throw_exception.hpp \
+		/usr/local/include/boost/exception/exception.hpp \
+		/usr/local/include/opencv2/flann/dist.h \
+		/usr/local/include/opencv2/flann/heap.h \
+		/usr/local/include/opencv2/flann/allocator.h \
+		/usr/local/include/opencv2/flann/random.h \
+		/usr/local/include/opencv2/flann/kdtree_single_index.h \
+		/usr/local/include/opencv2/flann/kmeans_index.h \
+		/usr/local/include/opencv2/flann/logger.h \
+		/usr/local/include/opencv2/flann/composite_index.h \
+		/usr/local/include/opencv2/flann/linear_index.h \
+		/usr/local/include/opencv2/flann/hierarchical_clustering_index.h \
+		/usr/local/include/opencv2/flann/lsh_index.h \
+		/usr/local/include/opencv2/flann/lsh_table.h \
+		/usr/local/include/opencv2/flann/autotuned_index.h \
+		/usr/local/include/opencv2/flann/ground_truth.h \
+		/usr/local/include/opencv2/flann/index_testing.h \
+		/usr/local/include/opencv2/flann/timer.h \
+		/usr/local/include/opencv2/flann/sampling.h \
+		/usr/local/include/opencv2/ml.hpp \
+		/usr/local/include/opencv2/objdetect.hpp \
+		/usr/local/include/opencv2/objdetect/detection_based_tracker.hpp \
+		/usr/local/include/opencv2/objdetect/objdetect_c.h \
+		/usr/local/include/opencv2/photo.hpp \
+		/usr/local/include/opencv2/photo/photo_c.h \
+		/usr/local/include/opencv2/shape.hpp \
+		/usr/local/include/opencv2/shape/emdL1.hpp \
+		/usr/local/include/opencv2/shape/shape_transformer.hpp \
+		/usr/local/include/opencv2/shape/hist_cost.hpp \
+		/usr/local/include/opencv2/shape/shape_distance.hpp \
+		/usr/local/include/opencv2/stitching.hpp \
+		/usr/local/include/opencv2/stitching/warpers.hpp \
+		/usr/local/include/opencv2/stitching/detail/warpers.hpp \
+		/usr/local/include/opencv2/core/cuda.hpp \
+		/usr/local/include/opencv2/core/cuda_types.hpp \
+		/usr/local/include/opencv2/core/cuda.inl.hpp \
+		/usr/local/include/opencv2/stitching/detail/warpers_inl.hpp \
+		/usr/local/include/opencv2/stitching/detail/matchers.hpp \
+		/usr/local/include/opencv2/xfeatures2d/cuda.hpp \
+		/usr/local/include/opencv2/stitching/detail/motion_estimators.hpp \
+		/usr/local/include/opencv2/stitching/detail/util.hpp \
+		/usr/local/include/opencv2/stitching/detail/util_inl.hpp \
+		/usr/local/include/opencv2/stitching/detail/camera.hpp \
+		/usr/local/include/opencv2/stitching/detail/exposure_compensate.hpp \
+		/usr/local/include/opencv2/stitching/detail/seam_finders.hpp \
+		/usr/local/include/opencv2/stitching/detail/blenders.hpp \
+		/usr/local/include/opencv2/superres.hpp \
+		/usr/local/include/opencv2/superres/optical_flow.hpp \
+		/usr/local/include/opencv2/video.hpp \
+		/usr/local/include/opencv2/video/tracking.hpp \
+		/usr/local/include/opencv2/video/background_segm.hpp \
+		/usr/local/include/opencv2/video/tracking_c.h \
+		/usr/local/include/opencv2/videostab.hpp \
+		/usr/local/include/opencv2/videostab/stabilizer.hpp \
+		/usr/local/include/opencv2/videostab/global_motion.hpp \
+		/usr/local/include/opencv2/videostab/optical_flow.hpp \
+		/usr/local/include/opencv2/videostab/motion_core.hpp \
+		/usr/local/include/opencv2/videostab/outlier_rejection.hpp \
+		/usr/local/include/opencv2/videostab/motion_stabilizing.hpp \
+		/usr/local/include/opencv2/videostab/frame_source.hpp \
+		/usr/local/include/opencv2/videostab/log.hpp \
+		/usr/local/include/opencv2/videostab/inpainting.hpp \
+		/usr/local/include/opencv2/videostab/fast_marching.hpp \
+		/usr/local/include/opencv2/videostab/fast_marching_inl.hpp \
+		/usr/local/include/opencv2/videostab/deblurring.hpp \
+		/usr/local/include/opencv2/videostab/wobble_suppression.hpp \
+		/usr/local/include/opencv2/videostab/ring_buffer.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../ev_face/mainwindow.cpp
 
 Cap_Controller.o: ../../src/Cap_Controller.cpp ../../include/Cap_Controller.hpp \
