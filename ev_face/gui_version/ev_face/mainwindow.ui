@@ -280,7 +280,7 @@
         <item row="4" column="0">
          <widget class="QTabWidget" name="toolkit_tagwidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="Crop">
            <attribute name="title">
@@ -288,7 +288,11 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout">
             <item row="0" column="1">
-             <widget class="QLineEdit" name="target_name_lineedit"/>
+             <widget class="QLineEdit" name="target_name_lineedit">
+              <property name="text">
+               <string>rzyang</string>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0" colspan="2">
              <widget class="QPushButton" name="snapshot_btn">

@@ -9,12 +9,15 @@ MainWindow::MainWindow(QWidget *parent) :
     is_draw_detection_result_(true),
     is_aligner_model_loaded_(false),
     is_draw_align_result_(true),
-    is_identifier_model_loaded_(false)
+    is_identifier_model_loaded_(false),
+    is_verify_start_(false),
+    verify_thresh_(0.6)
 {
     ui->setupUi(this);
 
     init_glog();
     init_cap();
+    init_verify_target_combo();
 
     connect(&timer_, SIGNAL(timeout()), this, SLOT(play_video()));
 }
@@ -45,6 +48,23 @@ void MainWindow::init_cap()     // 初始化Cap_Controller
     cap_.set_resize_factor(0.5, 0.5);
 }
 
+void MainWindow::init_verify_target_combo()
+{
+    // 遍历features目录
+    QDir features_dir(QString("/Users/rzyang/GraduationDesign/ev_face/gui_version/build/features/"));
+    features_dir.setFilter(QDir::Files | QDir::NoSymLinks);
+    const QFileInfoList file_list = features_dir.entryInfoList();
+    QFileInfoList::const_iterator iterator = file_list.begin();
+    while(iterator != file_list.end())
+    {
+        QString file_name = (*iterator).fileName();
+        file_name.remove(".features");
+        //qDebug() << file_name;
+        ui->verify_target_combo->addItem(file_name);
+        ++iterator;
+    }
+}
+
 bool MainWindow::get_frame()    // 读取一帧并显示
 {
     if(cap_.isOpened())
@@ -59,6 +79,8 @@ bool MainWindow::get_frame()    // 读取一帧并显示
 
         // construct image data
         seeta::ImageData img_data(origin_frame.cols, origin_frame.rows, 1);
+        seeta::ImageData img_color_data(origin_frame.cols, origin_frame.rows, 3);
+        img_color_data.data = origin_frame.data;
         cv::cvtColor(origin_frame, gray_frame, cv::COLOR_RGB2GRAY);
         img_data.data = gray_frame.data;
 
@@ -77,7 +99,7 @@ bool MainWindow::get_frame()    // 读取一帧并显示
                face_rect.height = faces[i].bbox.height;
                //LOG(INFO) << "score: " << faces[i].score;
                if(is_draw_detection_result_)
-                   cv::rectangle(origin_frame, face_rect, cv::Scalar(0,0,255), 2, 1, 0);
+                   cv::rectangle(origin_frame, face_rect, cv::Scalar(255,0,0), 2, 1, 0);
            }
 
            // alignment
@@ -97,14 +119,34 @@ bool MainWindow::get_frame()    // 读取一帧并显示
                        cv::Point center;
                        center.x = face_feature_points[i].x;
                        center.y = face_feature_points[i].y;
-                       cv::circle(origin_frame, center, 3, cv::Scalar(0,255,0), -1);
+                       cv::circle(origin_frame, center, 3, cv::Scalar(0,0,255), -1);
                    }
                }
 
                // identification
-               if(face_feature_points.size() > 0 && is_identifier_model_loaded_)
+               if(is_identifier_model_loaded_)
                {
                    ui->snapshot_btn->setEnabled(true);
+               }
+
+               // vertification
+               if(is_verify_start_)
+               {
+                   QString verify_target = ui->verify_target_combo->currentText();
+                   if(verify_target != QString(""))
+                   {
+                       int max_idx = verify(img_color_data, face_feature_points, verify_target, verify_thresh_);
+                       // qDebug() << "max_idx: " << max_idx;
+                       // Found match
+                       if(max_idx != -1)
+                       {
+                           face_rect.x = faces[max_idx].bbox.x;
+                           face_rect.y = faces[max_idx].bbox.y;
+                           face_rect.width = faces[max_idx].bbox.width;
+                           face_rect.height = faces[max_idx].bbox.height;
+                           cv::rectangle(origin_frame, face_rect, cv::Scalar(0,255,0), 2, 1, 0);
+                       }
+                   }
                }
 
            }
@@ -129,6 +171,82 @@ QPixmap MainWindow::mat_to_pixmap(Mat &src_img, int dst_width)
     if(dst_width > 0)
         image = image.scaledToWidth(dst_width);
     return QPixmap::fromImage(image);
+}
+
+cv::Mat MainWindow::image_to_mat(QImage &src_img)
+{
+    src_img = src_img.convertToFormat(QImage::Format_RGB888);
+    // src_img = src_img.rgbSwapped();
+    return cv::Mat(src_img.height(), src_img.width(),
+                   CV_8UC3,
+                   const_cast<uchar*>(src_img.bits()),
+                   static_cast<size_t>(src_img.bytesPerLine())
+                   ).clone();
+}
+
+void MainWindow::add_array(float (&src_array)[2048], float (&dst_array)[2048])
+{
+    for(int i = 0; i < face_identifier_->feature_size(); ++i)
+    {
+        dst_array[i] += src_array[i];
+    }
+}
+
+void MainWindow::avg_array(float (&src_array)[2048], float (&dst_array)[2048], float avg_num)
+{
+    for(int i = 0; i < face_identifier_->feature_size(); ++i)
+    {
+        dst_array[i] = src_array[i] / avg_num;
+    }
+}
+
+int MainWindow::verify(seeta::ImageData img_color_data, std::vector<seeta::FacialLandmark>& llpoints, QString &verify_target, float thresh)
+{
+    float dst_features[2048] = {0.0};
+    // 从文件读feature
+    if(!read_target_features(verify_target, dst_features))  return -1;
+    // 遍历faces，找到置信度超过阈值的脸，返回脸的index
+    const int point_num = llpoints.size();
+    seeta::FacialLandmark pt5[5];
+    float src_features[2048] = {0.0};
+    float max_sim = 0.0;
+    int max_idx = -1;
+    for(int i = 0; i <= point_num; ++i)
+    {
+        // assign point to pt5
+        if((i % 5 != 0 || i == 0) && i != point_num)
+        {
+            pt5[i % 5] = llpoints[i];
+        }
+        // when pt5 is full, extract features
+        else
+        {
+            face_identifier_->extract_features_with_crop(img_color_data, pt5, src_features);
+            float sim = face_identifier_->calc_sim(src_features, dst_features);
+            qDebug() << "sim: " << sim;
+            if(max_sim < sim && sim >= thresh)   {   max_sim = sim; max_idx = i / 5 - 1;   }
+        }
+    }
+    return max_idx;
+}
+
+bool MainWindow::read_target_features(QString& verify_target, float (&dst_array)[2048])
+{
+    QFile verify_target_file(feature_root_ + verify_target + QString(".features"));
+    // check if exist
+    if(!verify_target_file.exists())    return false;
+    // read file
+    if(!verify_target_file.open(QFile::ReadOnly))   return false;
+    QTextStream in(&verify_target_file);
+    QString line = in.readLine();
+    QStringList str_list = line.split(' ', QString::SkipEmptyParts);
+    // assign value to dst_array
+    for(int i = 0; i < str_list.size(); ++i)
+    {
+        QString str = str_list.at(i);
+        dst_array[i] = str.toFloat();
+    }
+    return true;
 }
 
 /* Slots */
@@ -463,20 +581,73 @@ void MainWindow::on_id_browse_btn_clicked()
 void MainWindow::on_gen_btn_clicked()
 {
     // check if dir features/ exist, if not create it.
-    QDir target_root_dir("/Users/rzyang/GraduationDesign/ev_face/gui_version/build/features");
+    QDir target_root_dir(feature_root_);
     if(!target_root_dir.exists())    target_root_dir.mkdir(target_root_dir.absolutePath());
     if(ui->target_name_lineedit->text() != QString(""))
     {
         // TODO
-        QFile target_feature(target_root_dir.absolutePath() + QString("/") + ui->target_name_lineedit->text() + QString(".bin"));
+        QFile target_feature(target_root_dir.absolutePath() + QString("/") + ui->target_name_lineedit->text() + QString(".features"));
         if(target_feature.exists())     target_feature.remove();
+
+        // 遍历images目录
+        QDir image_dir(QString(image_root_) + ui->target_name_lineedit->text());
+        image_dir.setFilter(QDir::Files | QDir::NoSymLinks);
+        const QFileInfoList list = image_dir.entryInfoList();
+        // QFileInfoList::const_iterator iterator = list.begin();
+        const int feature_size = face_identifier_->feature_size();
+        float features[2048] = {0.0};
+        float sum_features[2048] = {0.0};
+        float avg_features[2048] = {0.0};
+        qDebug() << "Feature size: " << feature_size;
+        int num_files = list.size();
+        QProgressDialog progress(QString("Extracting features from %1...").arg(target_root_dir.absolutePath()), "Abort Extract", 0, num_files, this);
+        // setting
+        progress.setWindowModality(Qt::WindowModal);
+        progress.setMinimumDuration(0);
+        progress.setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+        progress.setWindowTitle("Extract features");
+        for(int i = 0; i < num_files; ++i)
+        {
+            //qDebug() << (*iterator).fileName();
+            // TODO: extract features of every image and average them
+
+            // set progress bar
+            progress.setValue(i);
+            // exit if canceled
+            if(progress.wasCanceled())      break;
+
+            QString img_path = image_dir.absolutePath() + QString("/") + list[i].fileName();
+            qDebug() << "Extract features from " << img_path;
+            QImage src_img(img_path);
+            cv::Mat src_mat = image_to_mat(src_img);
+            ImageData src_img_data(src_img.width(), src_img.height(), 3);
+            src_img_data.data = src_mat.data;
+
+            face_identifier_->extract_features(src_img_data, features);
+
+            add_array(features, sum_features);
+        }
+        progress.setValue(num_files);
+        avg_array(sum_features, avg_features, (float)num_files);
+        // 写feature到文件
+        if (!target_feature.open(QIODevice::WriteOnly|QIODevice::Text))
+        {
+            QMessageBox::critical(NULL, "提示", "无法创建文件");
+            return;
+        }
+        QTextStream out(&target_feature);
+        for(int i = 0; i < face_identifier_->feature_size(); ++i)
+        {
+            out << avg_features[i] << " ";
+        }
+        target_feature.close();
     }
 }
 
 void MainWindow::on_snapshot_btn_clicked()      // 截图
 {
     // check if dir images/ exist, if not create it.
-    QDir target_root_dir("/Users/rzyang/GraduationDesign/ev_face/gui_version/build/images/");
+    QDir target_root_dir(image_root_);
     if(!target_root_dir.exists())      target_root_dir.mkdir(target_root_dir.absolutePath());
 
     // crop face
@@ -506,4 +677,9 @@ void MainWindow::on_snapshot_btn_clicked()      // 截图
         QString img_path = target_dir.absolutePath() + QString("/") + img_name;
         dst_pixmap.save(img_path);
     }
+}
+
+void MainWindow::on_verify_btn_clicked(bool checked)
+{
+    is_verify_start_ = checked;
 }

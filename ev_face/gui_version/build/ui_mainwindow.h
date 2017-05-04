@@ -364,7 +364,7 @@ public:
         retranslateUi(MainWindow);
 
         tabWidget->setCurrentIndex(2);
-        toolkit_tagwidget->setCurrentIndex(0);
+        toolkit_tagwidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -399,6 +399,7 @@ public:
         label_3->setText(QApplication::translate("MainWindow", "\346\250\241\345\236\213\350\267\257\345\276\204:", 0));
         id_switch_checkbox->setText(QApplication::translate("MainWindow", "\345\274\200\345\220\257", 0));
         id_browse_btn->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210", 0));
+        target_name_lineedit->setText(QApplication::translate("MainWindow", "rzyang", 0));
         snapshot_btn->setText(QApplication::translate("MainWindow", "\346\210\252\345\217\226", 0));
         gen_btn->setText(QApplication::translate("MainWindow", "\347\224\237\346\210\220", 0));
         label_4->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));

@@ -158,6 +158,16 @@ namespace ev
                 return identifier_->ExtractFeature(crop_img, feats);
             }
 
+            uint8_t extract_features_with_crop(const ImageData& src_img, const FacialLandmark* llpoint, FaceFeatures const feat)
+            {
+                return identifier_->ExtractFeatureWithCrop(src_img, llpoint, feat);
+            }
+
+            float calc_sim(FaceFeatures const feat1, FaceFeatures const feat2, long dim = -1)
+            {
+                return identifier_->CalcSimilarity(feat1, feat2, dim);
+            }
+
             uint32_t crop_width()   { return identifier_->crop_width(); }
             uint32_t crop_height()  { return identifier_->crop_height(); }
             uint32_t crop_channels(){ return identifier_->crop_channels(); }
