@@ -364,7 +364,7 @@ public:
         retranslateUi(MainWindow);
 
         tabWidget->setCurrentIndex(2);
-        toolkit_tagwidget->setCurrentIndex(1);
+        toolkit_tagwidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

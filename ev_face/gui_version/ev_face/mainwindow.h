@@ -77,7 +77,7 @@ private:
     cv::Mat image_to_mat(QImage& src_img);
     void add_array(float (&src_array)[2048], float (&dst_array)[2048]);
     void avg_array(float (&src_array)[2048], float (&dst_array)[2048], float avg_num);
-    int verify(seeta::ImageData img_color_data, std::vector<seeta::FacialLandmark>& llpoints, QString& verify_target, float thresh = 0.9);
+    int verify(seeta::ImageData img_color_data, std::vector<seeta::FacialLandmark>& llpoints, QString& verify_target, float thresh = 0.5);
     bool read_target_features(QString& verify_target, float (&dst_array)[2048]);
 
     Ui::MainWindow *ui;

@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     is_draw_align_result_(true),
     is_identifier_model_loaded_(false),
     is_verify_start_(false),
-    verify_thresh_(0.6)
+    verify_thresh_(0.5)
 {
     ui->setupUi(this);
 
@@ -600,6 +600,10 @@ void MainWindow::on_gen_btn_clicked()
         float avg_features[2048] = {0.0};
         qDebug() << "Feature size: " << feature_size;
         int num_files = list.size();
+        if(num_files <= 0)
+        {
+            QMessageBox::critical(this, "Error", "Got no images under " + image_dir.absolutePath());
+        }
         QProgressDialog progress(QString("Extracting features from %1...").arg(target_root_dir.absolutePath()), "Abort Extract", 0, num_files, this);
         // setting
         progress.setWindowModality(Qt::WindowModal);
@@ -632,7 +636,7 @@ void MainWindow::on_gen_btn_clicked()
         // 写feature到文件
         if (!target_feature.open(QIODevice::WriteOnly|QIODevice::Text))
         {
-            QMessageBox::critical(NULL, "提示", "无法创建文件");
+            QMessageBox::critical(this, "提示", "无法创建文件");
             return;
         }
         QTextStream out(&target_feature);
@@ -641,6 +645,11 @@ void MainWindow::on_gen_btn_clicked()
             out << avg_features[i] << " ";
         }
         target_feature.close();
+        // 添加目标到verify
+        if(ui->verify_target_combo->findText(ui->target_name_lineedit->text()) == -1)   // 没找着
+        {
+            ui->verify_target_combo->addItem(ui->target_name_lineedit->text());
+        }
     }
 }
 
