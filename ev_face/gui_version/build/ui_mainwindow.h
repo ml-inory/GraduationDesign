@@ -372,7 +372,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\344\272\272\350\204\270\350\257\206\345\210\253\345\260\217\350\275\257\344\273\266v0.1", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\344\272\272\350\204\270\350\257\206\345\210\253\345\260\217\350\275\257\344\273\266v1.0", 0));
         action_open_video->setText(QApplication::translate("MainWindow", "Open Video", 0));
         action_open_camera->setText(QApplication::translate("MainWindow", "Open Camera", 0));
         action_exit->setText(QApplication::translate("MainWindow", "Close", 0));

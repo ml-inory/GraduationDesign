@@ -15,15 +15,15 @@ include_directories(
             /usr/include
             /usr/local/include
             ./include
-            /home/inory/SeetaFaceEngine/FaceDetection/include
-            /home/inory/SeetaFaceEngine/FaceAlignment/include
-            /home/inory/SeetaFaceEngine/FaceIdentification/include
+            /Users/rzyang/SeetaFaceEngine/FaceDetection/include
+            /Users/rzyang/SeetaFaceEngine/FaceAlignment/include
+            /Users/rzyang/SeetaFaceEngine/FaceIdentification/include
             )
 
 # Set libs
-set(facedet_required_libs ${CMAKE_SOURCE_DIR}/lib/libseeta_facedet_lib.so)
-list(APPEND facedet_required_libs ${CMAKE_SOURCE_DIR}/lib/libseeta_fa_lib.so)
-list(APPEND facedet_required_libs ${CMAKE_SOURCE_DIR}/lib/libviplnet.so.4.5)
+set(facedet_required_libs /Users/rzyang/SeetaFaceEngine/FaceDetection/build/libseeta_facedet_lib.dylib)
+list(APPEND facedet_required_libs /Users/rzyang/SeetaFaceEngine/FaceAlignment/build/libseeta_fa_lib.dylib)
+list(APPEND facedet_required_libs /Users/rzyang/SeetaFaceEngine/FaceIdentification/build/libviplnet.dylib)
 
 # Use OPENCV
 find_package(OpenCV)

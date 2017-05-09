@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 	{
 		cout << "Usage: " << argv[0]
 			 << "video_path/camera_id" << endl;
+        return -1;
 	}
 
     ev::Cap_Controller cap;
@@ -123,7 +124,7 @@ int main(int argc, char** argv)
         // align
         if(num_face > 0)
         {
-            seeta::FacialLandmark points[5*num_face];
+            std::vector<seeta::FacialLandmark> points;
             bool align_ret = aligner.detect_multi_landmarks(img_data, faces, points);
         
             if(align_ret)
