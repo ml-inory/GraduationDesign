@@ -1,0 +1,3 @@
+/Users/rzyang/GraduationDesign/ev_face/crop_face/build/CMakeFiles/rebuild_cache.dir
+/Users/rzyang/GraduationDesign/ev_face/crop_face/build/CMakeFiles/edit_cache.dir
+/Users/rzyang/GraduationDesign/ev_face/crop_face/build/CMakeFiles/crop_face.dir
