@@ -1,0 +1,2 @@
+# GraduationDesign
+鄙人的毕业设计，基于SeetaFace的人脸识别小程序，针对SeetaFace的识别网络做了一些改进
