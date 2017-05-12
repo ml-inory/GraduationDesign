@@ -100,7 +100,7 @@ def save_img(img_url, img_path):
 def save_n_imgs_for_a_star(star_name, n_imgs=10):
     img_urls = get_img_urls(star_name.encode('utf8'), n_imgs)
     # create path
-    dataset_root = './dataset/baidu_stars'
+    dataset_root = '../dataset/baidu_stars'
     star_name = star_name.replace(' ', '_')
     img_root = os.path.join(dataset_root, star_name)
     if not os.path.exists(img_root):
