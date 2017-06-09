@@ -15,6 +15,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -26,6 +27,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -83,9 +85,12 @@ public:
     QLabel *snapshot_label;
     QWidget *Verify;
     QGridLayout *gridLayout_3;
-    QLabel *label_5;
     QComboBox *verify_target_combo;
     QPushButton *verify_btn;
+    QLabel *label_5;
+    QLabel *label_6;
+    QSpacerItem *verticalSpacer;
+    QDoubleSpinBox *verify_thresh_text;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QStatusBar *statusBar;
@@ -196,7 +201,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 215, 270));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 217, 270));
         scrollArea->setWidget(scrollAreaWidgetContents);
 
         gridLayout_2->addWidget(scrollArea, 5, 0, 1, 1);
@@ -244,7 +249,7 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 215, 264));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 217, 264));
         scrollArea_2->setWidget(scrollAreaWidgetContents_2);
 
         gridLayout_4->addWidget(scrollArea_2, 5, 1, 1, 1);
@@ -280,6 +285,11 @@ public:
 
         toolkit_tagwidget = new QTabWidget(Identify);
         toolkit_tagwidget->setObjectName(QStringLiteral("toolkit_tagwidget"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(toolkit_tagwidget->sizePolicy().hasHeightForWidth());
+        toolkit_tagwidget->setSizePolicy(sizePolicy1);
         Crop = new QWidget();
         Crop->setObjectName(QStringLiteral("Crop"));
         gridLayout = new QGridLayout(Crop);
@@ -319,21 +329,38 @@ public:
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
-        label_5 = new QLabel(Verify);
-        label_5->setObjectName(QStringLiteral("label_5"));
-
-        gridLayout_3->addWidget(label_5, 0, 0, 1, 1);
-
         verify_target_combo = new QComboBox(Verify);
         verify_target_combo->setObjectName(QStringLiteral("verify_target_combo"));
 
-        gridLayout_3->addWidget(verify_target_combo, 0, 1, 1, 1);
+        gridLayout_3->addWidget(verify_target_combo, 1, 1, 1, 1);
 
         verify_btn = new QPushButton(Verify);
         verify_btn->setObjectName(QStringLiteral("verify_btn"));
         verify_btn->setCheckable(true);
 
-        gridLayout_3->addWidget(verify_btn, 1, 0, 1, 2);
+        gridLayout_3->addWidget(verify_btn, 3, 0, 1, 2);
+
+        label_5 = new QLabel(Verify);
+        label_5->setObjectName(QStringLiteral("label_5"));
+
+        gridLayout_3->addWidget(label_5, 1, 0, 1, 1);
+
+        label_6 = new QLabel(Verify);
+        label_6->setObjectName(QStringLiteral("label_6"));
+
+        gridLayout_3->addWidget(label_6, 2, 0, 1, 1);
+
+        verticalSpacer = new QSpacerItem(14, 36, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer, 4, 0, 1, 1);
+
+        verify_thresh_text = new QDoubleSpinBox(Verify);
+        verify_thresh_text->setObjectName(QStringLiteral("verify_thresh_text"));
+        verify_thresh_text->setMaximum(1);
+        verify_thresh_text->setSingleStep(0.1);
+        verify_thresh_text->setValue(0.7);
+
+        gridLayout_3->addWidget(verify_thresh_text, 2, 1, 1, 1);
 
         toolkit_tagwidget->addTab(Verify, QString());
 
@@ -364,7 +391,7 @@ public:
         retranslateUi(MainWindow);
 
         tabWidget->setCurrentIndex(2);
-        toolkit_tagwidget->setCurrentIndex(0);
+        toolkit_tagwidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -372,7 +399,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\344\272\272\350\204\270\350\257\206\345\210\253\345\260\217\350\275\257\344\273\266v1.0", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "EVFace v1.0", 0));
         action_open_video->setText(QApplication::translate("MainWindow", "Open Video", 0));
         action_open_camera->setText(QApplication::translate("MainWindow", "Open Camera", 0));
         action_exit->setText(QApplication::translate("MainWindow", "Close", 0));
@@ -395,7 +422,7 @@ public:
         align_switch_checkbox->setText(QApplication::translate("MainWindow", "\345\274\200\345\220\257", 0));
         align_show_checkbox->setText(QApplication::translate("MainWindow", "\346\230\276\347\244\272\347\202\271\347\272\277\346\241\206", 0));
         tabWidget->setTabText(tabWidget->indexOf(Align), QApplication::translate("MainWindow", "Align", 0));
-        id_model_lineedit->setText(QApplication::translate("MainWindow", "/Users/rzyang/SeetaFaceEngine/FaceIdentification/model/seeta_fr_v1.0.bin", 0));
+        id_model_lineedit->setText(QApplication::translate("MainWindow", "/Users/rzyang/GraduationDesign/ev_face/for_caffe/EVFaceNet.bin", 0));
         label_3->setText(QApplication::translate("MainWindow", "\346\250\241\345\236\213\350\267\257\345\276\204:", 0));
         id_switch_checkbox->setText(QApplication::translate("MainWindow", "\345\274\200\345\220\257", 0));
         id_browse_btn->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210", 0));
@@ -405,8 +432,9 @@ public:
         label_4->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));
         snapshot_label->setText(QString());
         toolkit_tagwidget->setTabText(toolkit_tagwidget->indexOf(Crop), QApplication::translate("MainWindow", "Crop", 0));
-        label_5->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));
         verify_btn->setText(QApplication::translate("MainWindow", "\345\257\271\346\257\224", 0));
+        label_5->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\345\220\215\347\247\260\357\274\232", 0));
+        label_6->setText(QApplication::translate("MainWindow", "\345\210\244\345\210\253\351\230\210\345\200\274\357\274\232", 0));
         toolkit_tagwidget->setTabText(toolkit_tagwidget->indexOf(Verify), QApplication::translate("MainWindow", "Verify", 0));
         tabWidget->setTabText(tabWidget->indexOf(Identify), QApplication::translate("MainWindow", "Identify", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));

@@ -65,6 +65,8 @@ private slots:
 
     void on_verify_btn_clicked(bool checked);
 
+    void on_verify_thresh_text_valueChanged(double arg1);
+
 protected:
     void resizeEvent(QResizeEvent *event);
 

@@ -28,7 +28,10 @@ namespace ev
     class Face_Detector
     {
         public:
-            Face_Detector(const string model_path="", int32_t min_face_size=20/*at least 20*/, int32_t max_face_size=-1/*compute by pyramid_scale_factor*/, float score_thresh=2.f, float pyramid_scale_factor=0.8f, int32_t window_step=4):
+            Face_Detector(const string model_path="", \
+                          int32_t min_face_size=20/*at least 20*/, \
+                          int32_t max_face_size=-1/*compute by pyramid_scale_factor*/, \
+                          float score_thresh=2.f, float pyramid_scale_factor=0.8f, int32_t window_step=4):
                 model_path_(model_path),
                 min_face_size_(min_face_size),
                 score_thresh_(score_thresh),

@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     is_draw_align_result_(true),
     is_identifier_model_loaded_(false),
     is_verify_start_(false),
-    verify_thresh_(0.5)
+    verify_thresh_(0.6)
 {
     ui->setupUi(this);
 
@@ -156,7 +156,10 @@ bool MainWindow::get_frame()    // 读取一帧并显示
            }
         }
 
-        QImage image = QImage((const unsigned char*)origin_frame.data, origin_frame.cols, origin_frame.rows, QImage::Format_RGB888).scaledToWidth(ui->video_label->width());
+        QImage image = QImage((const unsigned char*)origin_frame.data, \
+                              origin_frame.cols, origin_frame.rows, \
+                              QImage::Format_RGB888).scaledToWidth \
+                (ui->video_label->width());
         ui->video_label->setPixmap(QPixmap::fromImage(image));
 
         return true;
@@ -560,6 +563,9 @@ void MainWindow::on_id_switch_checkbox_clicked(bool checked)    // 识别模块�
     else
     {
         is_identifier_model_loaded_ = false;
+        // 弹起"对比"按钮，停止对比
+        is_verify_start_ = false;
+        ui->verify_btn->setChecked(false);
     }
 
     ui->toolkit_tagwidget->setEnabled(is_identifier_model_loaded_);
@@ -660,7 +666,8 @@ void MainWindow::on_snapshot_btn_clicked()      // 截图
     if(!target_root_dir.exists())      target_root_dir.mkdir(target_root_dir.absolutePath());
 
     // crop face
-    cv::Mat dst_img(face_identifier_->crop_height(), face_identifier_->crop_width(), CV_8UC(face_identifier_->crop_channels()));
+    cv::Mat dst_img(face_identifier_->crop_height(), face_identifier_->crop_width(), \
+                    CV_8UC(face_identifier_->crop_channels()));
 
     ImageData dst_img_data(dst_img.cols, dst_img.rows, dst_img.channels());
     dst_img_data.data = dst_img.data;
@@ -691,4 +698,10 @@ void MainWindow::on_snapshot_btn_clicked()      // 截图
 void MainWindow::on_verify_btn_clicked(bool checked)
 {
     is_verify_start_ = checked;
+    verify_thresh_ = ui->verify_thresh_text->text().toDouble();
+}
+
+void MainWindow::on_verify_thresh_text_valueChanged(double arg1)
+{
+    verify_thresh_ = arg1;
 }
